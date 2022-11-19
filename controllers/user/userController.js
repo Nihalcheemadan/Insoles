@@ -40,6 +40,10 @@ module.exports = {
     }
   },
 
+  var:(req,res)=>{
+    res.send('new commit')
+  },
+
   //user home page
 
   home: async (req, res) => {

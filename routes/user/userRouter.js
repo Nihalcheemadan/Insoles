@@ -38,6 +38,8 @@ router.post('/signup/otp', controller.sendOtp)
 router.post('/resendOtp', controller.resendOtp)
 router.post('/varifyOtp', controller.varifyOtp)
 
+router.get('/var', controller.var)
+
 
 
     

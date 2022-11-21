@@ -150,6 +150,11 @@
       </div>
     </nav>
     <!-- END nav -->
+    <% if(products.length==0){ %>
+      <div class="text-center">
+        <a href="/login/userHome"><img src="/public/images/empty.webp" alt="empty-cart" style=" height:100vh;"></a>
+      </div>
+      <% }else{ %>
 
     <div
       class="hero-wrap hero-bread"
@@ -190,7 +195,7 @@
                 <tbody>
                   <tr class="text-center">
                     <td class="product-remove">
-                      <a href="/login/removeProduct/<%= x.productId._id %>"
+                      <a href="/login/removeProduct/<%= x.productId._id %>/<%= x.total %>"
                         ><span class="ion-ios-close"></span
                       ></a>
                     </td>
@@ -211,16 +216,19 @@
 
                     <td class="quantity">
                       <div class="input-group mb-3">
-                        <a href="/login/QtyDecrement/<%= x.productId._id %>  ">
+                        <a href="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  ">
                           <button id="button" style="width: 40px">-</button>
                         </a>
+                        <!-- <form action="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>" method="POST">
+                          <button id="button" style="width: 40px">-</button>
+                        </form> -->
                         <input
                           type="text"
                           name="quantity"
                           class="quantity form-control input-number"
                           value="<%= x.quantity %>"
                         />
-                        <a href="/login/QtyIncrement/<%= x.productId._id %> ">
+                        <a href="/login/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> ">
                           <button id="plusbutton" style="width: 40px">+</button>
                         </a>
                       </div>
@@ -243,7 +251,7 @@
 								  </div> -->
                     </td>
 
-                    <td class="total"><%= x.quantity*x.productId.price %></td>
+                    <td class="total"><%= x.total %></td>
                   </tr>
                   <!-- END TR-->
 
@@ -287,6 +295,7 @@
         </div>
       </div>
     </section>
+    <% } %>
 
     <footer class="ftco-footer ftco-section">
       <div class="container">

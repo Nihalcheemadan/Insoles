@@ -24,10 +24,7 @@ const cartSchema = new mongoose.Schema({
   cartTotal:{
     type:Number,
   },
-  discount:{
-    type:Number,
-    default:0,
-  }
+  
 });
 
 module.exports = cartModel = mongoose.model("cart", cartSchema);

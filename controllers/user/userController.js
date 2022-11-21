@@ -1,8 +1,6 @@
 const bcrypt = require("bcrypt");
 const signupModel = require("../../models/user/signupModel");
 const addProduct = require("../../models/admin/addProduct");
-const cartModel = require("../../models/user/cartModel");
-const wishlistSchema = require("../../models/user/wishlistSchema");
 const nodemailer = require("nodemailer");
 const checkoutSchema = require("../../models/user/addressSchema");
 const addressSchema = require("../../models/user/addressSchema");
@@ -82,7 +80,7 @@ module.exports = {
     }
   },
 
-  resendOtp: async (req,res) => {
+  resendOtp: async (req, res) => {
     var mailOptions = {
       to: Email,
       subject: "Otp for registration is: ",
@@ -124,12 +122,12 @@ module.exports = {
             })
             .catch((err) => {
               console.log(err);
-              res.redirect("/login"); 
+              res.redirect("/login");
             });
         });
       });
     } else {
-      res.render("user/otp");  
+      res.render("user/otp");
     }
   },
 
@@ -166,8 +164,6 @@ module.exports = {
     res.render("user/productdetail", { singleProduct });
   },
 
-  
-
   // logout
 
   logout: (req, res, next) => {
@@ -181,106 +177,6 @@ module.exports = {
         }
       });
     }
-  },
-
-  // cart showing page
-
-  cart: async (req, res) => {
-    let user = req.session.user;
-    let userId = user._id;
-    let totalprice = 0;
-
-    let cart = await cartModel
-      .findOne({ userId: userId })
-      .populate("products.productId");
-
-    console.log(cart);
-
-    if (cart) {
-      let products = cart.products;
-
-      console.log("cart id:" + cart);
-
-      let cartId = cart._id;
-
-      let cartTotal = cart.cartTotal;
-
-      console.log(products);
-      res.render("user/cart", { products, cartId, cartTotal });
-    } else {
-      res.render("user/cart", { products: [], cartId: null, cartTotal: 00 });
-    }
-  },
-
-  // add to cart
-
-  addToCart: async (req, res) => {
-    let user = req.session.user;
-    let userId = user._id;
-    let productId = req.params.id;
-    let product = await addProduct.findById({ _id: productId });
-    let quantity = req.body.quantity;
-    console.log(quantity);
-    console.log(product);
-    total = product.price * quantity;
-
-    let cart = await cartModel.findOne({ userId: userId });
-
-    if (cart) {
-      // checking that product already exist in cart
-      let exist = await cartModel.findOne({
-        userId,
-        "products.productId": productId,
-      });
-      if (exist != null) {
-        await cartModel.findOneAndUpdate(
-          { userId, "products.productId": productId },
-          {
-            $inc: {
-              "products.$.quantity": quantity,
-              "products.$.total": total,
-              cartTotal: total,
-            },
-          }
-        );
-      } else {
-        await cartModel.findOneAndUpdate(
-          { userId },
-          {
-            $push: { products: { productId, quantity, total } },
-            $inc: { cartTotal: total },
-          }
-        );
-      }
-    } else {
-      const newCart = new cartModel({
-        userId: userId,
-        products: [{ productId, quantity, total }],
-        cartTotal: total,
-      });
-      newCart.save();
-    }
-    res.redirect("/login/cart");
-    //
-  },
-
-  //remove cart product
-
-  removeCartProduct: async (req, res) => {
-    const productId = req.params.id;
-    console.log(productId);
-    let user = req.session.user;
-    let userId = user._id;
-    console.log(userId);
-
-    await cartModel
-      .findOneAndUpdate(
-        { userId: userId },
-        { $pull: { products: { productId } } }
-      )
-      .then(() => {
-        res.redirect("/login/cart");
-      });
   },
 
   //checkout
@@ -311,96 +207,7 @@ module.exports = {
       });
   },
 
-  //remove wishlist product
+  
 
-  removeWishlistProduct: async (req, res) => {
-    const id = req.params.id;
-    let user = req.session.user;
-    let userId = user._id;
-    await wishlistSchema
-      .findOneAndUpdate({ userId }, { $pull: { productIds: id } })
-      .then(() => {
-        res.redirect("/login/wishlist");
-      });
-  },
-
-  QtyIncrement: async (req, res) => {
-    let user = req.session.user;
-    let userId = user._id;
-    let productId = req.params.id;
-    console.log("userid" + userId, "prodid" + productId);
-    let cart = await cartModel
-      .findOneAndUpdate(
-        { userId: userId, "products.productId": productId },
-        { $inc: { "products.$.quantity": 1 } }
-      )
-      .then(() => {
-        res.redirect("/login/cart");
-      });
-  },
-
-  QtyDecrement: async (req, res) => {
-    let user = req.session.user;
-    let userId = user._id;
-    let productId = req.params.id;
-
-    console.log("userid" + userId, "prodid" + productId);
-    let cart = await cartModel
-      .findOneAndUpdate(
-        { userId: userId, "products.productId": productId },
-        { $inc: { "products.$.quantity": -1 } }
-      )
-      .then(() => {
-        res.redirect("/login/cart");
-      });
-  },
-
-  //wishlist page
-
-  wishlist: (req, res) => {
-    let user = req.session.user;
-    let userId = user._id;
-    return new Promise(async (resolve, reject) => {
-      let list = await wishlistSchema
-        .findOne({ userId: userId })
-        .populate("productIds")
-        .then((list) => {
-          if (list) {
-            resolve(list.productIds);
-          } else {
-            resolve();
-          }
-        });
-    }).then((list) => {
-      if (list) {
-        res.render("user/wishlist", { login: true, list });
-      } else {
-        res.render("user/wishlist", { login: true, list: [] });
-      }
-    });
-  },
-
-  // ADD TO WISHLIST
-  addToWishlist: async (req, res, next) => {
-    let productId = req.params.id;
-    let user = req.session.user;
-    let user_id = user._id;
-
-    let wishlist = await wishlistSchema.findOne({ userId: user_id });
-    if (wishlist) {
-      await wishlistSchema.findOneAndUpdate(
-        { userId: user_id },
-        { $addToSet: { productIds: productId } }
-      );
-      res.redirect("/login/wishlist");
-    } else {
-      const wish = new wishlistSchema({
-        userId: user_id,
-        productIds: [productId],
-      });
-      wish.save().then(() => {
-        res.redirect("/login/wishlist");
-      });
-    }
-  },
+  
 };

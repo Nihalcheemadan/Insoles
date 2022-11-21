@@ -70,13 +70,19 @@
 	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
 	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
 	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="/cart" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+	          <li class="nav-item cta cta-colored"><a href="/login/cart" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
 
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
     <!-- END nav -->
+
+	<% if(list.length==0){ %>
+		<div class="text-center">
+		  <a href="/login/userHome"><img src="/public/images/emptywishlist.webp" alt="empty-cart" style=" height:100vh;"></a>
+		</div>
+		<% }else{ %>
 
     <div class="hero-wrap hero-bread" style="background-image: url('../../public/images/bg_6.jpg');">
       <div class="container">
@@ -125,7 +131,7 @@
 						        <td class="quantity">
 									<div class="col col-lg-12 col-md-12 mt-5 cart-wrap ftco-animate">
     				
-										<p class="text-center"><a href="/login/addToCart/<%= x._id %>" class="btn btn-primary py-3 px-4">Add to Cart</a></p>
+										<p class="text-center"><a href="/login/productdetail/<%= x._id %>" class="btn btn-primary py-3 px-4">Add to Cart</a></p>
 									</div>
 						        	
 							</td>
@@ -149,6 +155,8 @@
     		</div>
 			</div>
 		</section>
+
+		<% } %>
 		
 
     <footer class="ftco-footer ftco-section">

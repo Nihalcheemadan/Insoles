@@ -1,36 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../../controllers/user/userController');
+const cartController = require('../../controllers/user/cartController');
+const wishlistController = require('../../controllers/user/wishlistController');
 
-router.get('/', controller.login);
 
 router.get('/userHome',controller.userSession,controller.home);
 
-// router.post('/signup' , controller.signup);
-
+router.get('/', controller.login);
+router.get('/logout', controller.logout)
 router.post('/user', controller.signin);
 
-router.get('/logout', controller.logout)
-
-router.get('/cart',controller.userSession,controller.cart)
-
+router.get('/checkout',controller.userSession, controller.checkout)
 router.get('/productdetail/:id',controller.showProductdetails);
 
-router.post('/addToCart/:id',controller.userSession,controller.addToCart)
 
-router.get('/removeProduct/:id',controller.userSession,controller.removeCartProduct)
 
-router.get('/checkout',controller.userSession, controller.checkout)
+//wishlist routes
 
-router.get('/wishlist',controller.userSession,controller.wishlist)
+router.get('/wishlist',controller.userSession,wishlistController.wishlist)
+router.get('/addToWishlist/:id',controller.userSession,wishlistController.addToWishlist)
+router.get('/removeWishlistProduct/:id',wishlistController.removeWishlistProduct)
 
-router.get('/addToWishlist/:id',controller.userSession,controller.addToWishlist)
 
-router.get('/removeWishlistProduct/:id',controller.removeWishlistProduct)
+//cart routes
 
-router.get('/QtyIncrement/:id',controller.userSession, controller.QtyIncrement)
-
-router.get('/QtyDecrement/:id',controller.userSession, controller.QtyDecrement)
+router.get('/cart',controller.userSession,cartController.cart)
+router.post('/addToCart/:id',controller.userSession,cartController.addToCart)
+router.get('/removeProduct/:id/:total',controller.userSession,cartController.removeCartProduct)
+router.get('/QtyIncrement/:id/:price',controller.userSession, cartController.QtyIncrement)
+router.get('/QtyDecrement/:id/:price',controller.userSession, cartController.QtyDecrement)
 
 //OTP PAGE
 

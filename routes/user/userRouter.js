@@ -40,5 +40,4 @@ router.post('/varifyOtp', controller.varifyOtp)
 
 
 
-    
 module.exports = router;

@@ -86,7 +86,7 @@ module.exports = {
 
     let product = addProduct.findById(productId);
 
-    await cartModel
+      await cartModel
       .findOneAndUpdate(
         { userId: userId },
         {

@@ -179,35 +179,99 @@ module.exports = {
     }
   },
 
-  //checkout
+  //profile page
 
-  checkout: async (req, res) => {
-    const { fname, lname, state, street, town, pincode, phone, email } =
-      req.body;
+  profile: async (req, res) => {
+    let userId = req.session.user._id;
 
-    const address = addressSchema({
-      fname,
-      lname,
-      state,
-      street,
-      town,
-      pincode,
-      phone,
-      email,
-    });
-    await address
-      .save()
+    let address = await addressSchema.findOne({ userId });
+    let user = req.session.user;
+
+    if (address != null) {
+      if (address.address.length > 0) {
+        let num = address.address.length - 1;
+        address = address.address[num];
+      } else address = [];
+    } else {
+      address = [];
+    }
+    res.render("user/profile", { address, user });
+  },
+
+  // add address
+
+  addAddress: async (req, res) => {
+    res.render("user/addAddress");
+  },
+
+  manageAddress: async (req, res) => {
+    let userId = req.session.user._id;
+
+    let address = await addressSchema.findOne({ userId: userId });
+
+    if (address != null) {
+      if (address.address.length > 0) {
+        address = address.address;
+      } else address = [];
+    } else {
+      address = [];
+    }
+
+    res.render("user/manageAddress", { address , index:1 });
+  },
+
+  deleteAddress: async (req, res) => {
+    let userId = req.session.user._id;
+    let addressId = req.params.id;
+
+    let address = await addressSchema
+      .findOneAndUpdate(
+        { userId: userId },
+        { $pull: { address: { _id: addressId } } }
+      )
       .then(() => {
-        console.log(address);
-        res.render("user/checkout");
-      })
-      .catch((err) => {
-        console.log(err.message);
-        console.log(err);
+        res.redirect("/login/manageAddress");
       });
   },
 
-  
+  newAddress: async (req, res) => {
+    let userId = req.session.user._id;
+    const { fullName, houseName, city, state, pincode, phone } = req.body;
+    let exist = await addressSchema.findOne({ userId: userId });
 
-  
+    if (exist) {
+      await addressSchema
+        .findOneAndUpdate(
+          { userId },
+          {
+            $push: {
+              address: { fullName, houseName, city, state, pincode, phone },
+            },
+          }
+        )
+        .then(() => {
+          res.redirect("/login/manageAddress");
+        });
+    } else {
+      const address = new addressSchema({
+        userId,
+        address: [{ fullName, houseName, city, state, pincode, phone }],
+      });
+      await address
+        .save()
+        .then(() => {
+          res.redirect("/login/manageAddress");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  },
+
+  //checkout
+
+  checkout: async (req, res) => {
+    
+      res.render("user/checkout");
+  },
 };

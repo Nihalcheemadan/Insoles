@@ -3,30 +3,22 @@ const router = express.Router();
 const controller = require("../../controllers/user/userController");
 const cartController = require("../../controllers/user/cartController");
 const wishlistController = require("../../controllers/user/wishlistController");
+const orderController = require('../../controllers/user/orderController')
+
 
 router.get("/userHome", controller.userSession, controller.home);
 
 router.get("/", controller.login);
 router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
-
-
-//order management
-router.get("/checkout", controller.userSession, controller.checkout);   
-router.post('/placeOrder', controller.placeOrder);
-router.get('/orderSuccess',controller.orderSuccess)
-
-
 router.get("/productdetail/:id", controller.showProductdetails);
 
+//user profile and address management
+
 router.get("/profile", controller.userSession, controller.profile);
-
 router.get("/addAddressPage", controller.userSession, controller.addAddress);
-
 router.post("/newAddress", controller.userSession, controller.newAddress);
-
 router.get("/manageAddress", controller.userSession, controller.manageAddress);
-
 router.get(
   "/deleteAddress/:id",
   controller.userSession,
@@ -66,10 +58,20 @@ router.get(
   cartController.QtyDecrement
 );
 
+
 //OTP PAGE
 
 router.post("/signup/otp", controller.sendOtp);
 router.post("/resendOtp", controller.resendOtp);
 router.post("/varifyOtp", controller.varifyOtp);
+
+
+//order management
+router.post("/changeAddress", orderController.checkout);   
+router.get('/checkout',controller.userSession, orderController.checkout)
+router.post('/placeOrder', orderController.placeOrder);
+router.get('/orderSuccess',controller.userSession , orderController.orderSuccess)
+router.post('/checkoutNewAddress',orderController.checkoutNewAddress)
+
 
 module.exports = router;

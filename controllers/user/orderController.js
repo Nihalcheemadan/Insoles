@@ -1,107 +1,103 @@
+const addressSchema = require("../../models/user/addressSchema");
+const cartModel = require("../../models/user/cartModel");
+const orderSchema = require("../../models/user/orderSchema");
+
 module.exports = {
-  // Place Order
+  //checkout
+
   checkout: async (req, res) => {
-    let index = Number(req.body.index);
-    if (!index) {
-      index = 0;
-    }
-    const userId = req.session.userId;
-    const addresses = await addressModel.findOne({ user: userId });
-    let address;
-    if (addresses) {
-      address = addresses.address;
+    let userId = req.session.user._id;
+
+    let cart = await cartModel
+      .findOne({ userId: userId })
+      .populate("products.productId");
+    let address = await addressSchema.findOne({ userId });
+
+    if (cart != null && cart.products.length > 0) {
+      let cartTotal = cart.cartTotal;
+      let cartItems = cart.products;
+      address = address ? address.address : 0;
+      let length = address ? address.length : 0;
+      let index = req.body.index ? req.body.index : length - 1;
+
+      res.render("user/checkout", { cartTotal, cartItems, address, index });
     } else {
-      address = [];
-    }
-    const cartItems = await cartModel.findOne({ owner: userId });
-    if (cartItems) {
-      res.render("user/checkout", {
-        login: req.session.login,
-        address,
-        index,
-        cartItems,
-      });
-    } else {
-      res.redirect("/login");
+      res.redirect("/login/cart");
     }
   },
 
-  // Oreder Conform
-  orderConfirm: async (req, res) => {
-    console.log(req.body);
-    const paymentMethod = req.body.paymentMethod;
-    const userId = req.session.userId;
-    const indexof = parseInt(req.body.index);
-    const addresses = await addressModel.findOne({ user: userId });
-    const address = addresses.address[indexof];
-    const cart = await cartModel.findOne({ owner: userId });
-    const products = cart.items;
-    const grandTotal = cart.cartTotal;
-    const addOrder = await orderModel({
+  //place an order
+
+  placeOrder: async (req, res) => {
+    let userId = req.session.user._id;
+    let adrsIndex = req.body["index"];
+    console.log("adrsIndex" + adrsIndex);
+    let paymentMethod = req.body["paymentMethod"];
+
+    let addresses = await addressSchema.findOne({ userId });
+    let address = addresses.address[adrsIndex];
+
+    let cart = await cartModel.findOne({ userId });
+    let total = cart.cartTotal;
+    let products = cart.products;
+
+    const newOrder = new orderSchema({
       userId,
       products,
+      total,
       address,
-      grandTotal,
       paymentMethod,
     });
-    addOrder.save();
-    // await cartModel.findOneAndDelete({ owner: userId })
-    if (paymentMethod === "COD") {
-      res.json({ payment: "COD" });
-      // res.render('user/order-success', { login: req.session.login })
+    newOrder.save().then(async () => {
+      await cartModel.findByIdAndDelete({ _id: cart._id });
+      let orderId = newOrder._id,
+        total = newOrder.total;
+    });
+
+    if (paymentMethod == "COD") {
+      res.json({ codeSuccess: true });
+    }
+  },
+
+  //checkout page new address updation
+
+  checkoutNewAddress: async (req, res) => {
+    let userId = req.session.user._id;
+    const { fullName, houseName, city, state, pincode, phone } = req.body;
+    let exist = await addressSchema.findOne({ userId: userId });
+
+    if (exist) {
+      await addressSchema
+        .findOneAndUpdate(
+          { userId },
+          {
+            $push: {
+              address: { fullName, houseName, city, state, pincode, phone },
+            },
+          }
+        )
+        .then(() => {
+          res.redirect("/login/checkout");
+        });
     } else {
-      var instance = new Razorpay({
-        key_id: "rzp_test_ot382G21y8f1J7",
-        key_secret: "QegvCVlutW7TdMqKKFVLQt1I",
+      const address = new addressSchema({
+        userId,
+        address: [{ fullName, houseName, city, state, pincode, phone }],
       });
-      const options = {
-        amount: addOrder.grandTotal * 100,
-        currency: "INR",
-        reciept: "" + addOrder._id,
-      };
-      instance.orders.create(options, (err, order) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("new order", order);
-          res.json(order);
-        }
-      });
+      await address
+        .save()
+        .then(() => {
+          res.redirect("/login/checkout");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     }
   },
 
-  //Orders View
-  orderView: async (req, res) => {
-    const userName = req.session.userName;
-    const userId = req.session.userId;
+  //order success 
 
-    const Orders = await orderModel
-      .find({ userId: userId })
-      .populate("products.product")
-      .exec((err, allOrders) => {
-        if (err) {
-          console.log(err);
-        }
-
-        res.render("user/view-order", { userName, allOrders });
-      });
-  },
-
-  //payment verification
-  paymentVerification: (req, res) => {
-    console.log(req.body);
-    const crypto = require("crypto");
-    let hmac = crypto.createHmac("sha256", "QegvCVlutW7TdMqKKFVLQt1I");
-    console.log(req.body.order.data.id);
-    hmac.update(
-      req.body.payment.razorpay_order_id +
-        "|" +
-        req.body.payment.razorpay_payment_id
-    );
-    hmac = hmac.digest("hex");
-    if (hmac == req.body.payment.razorpay_signature) {
-      response = { valid: "true" };
-      res.json(response);
-    }
+  orderSuccess: (req, res) => {
+    res.render("user/orderSuccess");
   },
 };

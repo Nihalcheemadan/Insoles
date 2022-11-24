@@ -10,7 +10,12 @@ router.get("/", controller.login);
 router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 
-router.get("/checkout", controller.userSession, controller.checkout);
+
+//order management
+router.get("/checkout", controller.userSession, controller.checkout);   
+router.post('/placeOrder', controller.placeOrder);
+router.get('/orderSuccess',controller.orderSuccess)
+
 
 router.get("/productdetail/:id", controller.showProductdetails);
 

@@ -4,6 +4,7 @@ const addProduct = require("../../models/admin/addProduct");
 const nodemailer = require("nodemailer");
 const checkoutSchema = require("../../models/user/addressSchema");
 const addressSchema = require("../../models/user/addressSchema");
+const orderSchema = require("../../models/user/orderSchema");
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -217,7 +218,7 @@ module.exports = {
       address = [];
     }
 
-    res.render("user/manageAddress", { address , index:1 });
+    res.render("user/manageAddress", { address, index: 1 });
   },
 
   deleteAddress: async (req, res) => {
@@ -271,7 +272,66 @@ module.exports = {
   //checkout
 
   checkout: async (req, res) => {
-    
-      res.render("user/checkout");
+    let userId = req.session.user._id;
+
+    let cart = await cartModel
+      .findOne({ userId: userId })
+      .populate("products.productId");
+    let address = await addressSchema.findOne({ userId });
+
+    if (cart != null && cart.products.length > 0) {
+      let cartTotal = cart.cartTotal;
+      let cartItems = cart.products;
+      address = address ? address.address : 0;
+      let length = address ? address.length : 0;
+      let index = req.body.index ? req.body.index : length - 1;
+
+      res.render("user/checkout", { cartTotal, cartItems, address, index });
+    } else {
+      res.redirect("/login/cart");
+    }
   },
+
+  placeOrder: async (req, res) => {
+    let userId = req.session.user._id;
+    let adrsIndex = req.body["index"];
+    let paymentMethod = req.body["paymentMethod"];
+
+    let addresses = await addressSchema.findOne({ userId });
+    let address = addresses.address[adrsIndex];
+
+    let cart = await cartModel.findOne({ userId });
+    let total = cart.cartTotal;
+    let products = cart.products;
+
+    const newOrder = new orderSchema({
+      userId,
+      products,
+      total,
+      address,
+      paymentMethod,
+    });
+    newOrder.save().then(async () => {
+      await cartModel.findByIdAndDelete({ _id: cart._id });
+      let orderId = newOrder._id,
+        total = newOrder.total;
+      
+    });
+
+    if (paymentMethod == 'COD') {
+      res.json({codSuccess:true})
+    } 
+    // else {
+    //   checkoutHelpers.generateRazorpay(orderId, total).then((response)=>{
+    //     res.json(response)
+    //   })
+    // }
+
+
+  },
+
+  orderSuccess:(req,res)=>{
+    res.render('user/orderSuccess')
+  }
+
 };

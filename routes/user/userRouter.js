@@ -28,35 +28,17 @@ router.get(
 //wishlist routes
 
 router.get("/wishlist", controller.userSession, wishlistController.wishlist);
-router.get(
-  "/addToWishlist/:id",
-  controller.userSession,
-  wishlistController.addToWishlist
-);
-router.get(
-  "/removeWishlistProduct/:id",
-  wishlistController.removeWishlistProduct
-);
+router.get("/addToWishlist/:id",controller.userSession,wishlistController.addToWishlist);
+router.get("/removeWishlistProduct/:id",wishlistController.removeWishlistProduct);
+router.get('/moveToCart/:id', controller.userSession , wishlistController.moveToCart)
 
-//cart routes
+//cart routes                   
 
 router.get("/cart", controller.userSession, cartController.cart);
 router.post("/addToCart/:id", controller.userSession, cartController.addToCart);
-router.get(
-  "/removeProduct/:id/:total",
-  controller.userSession,
-  cartController.removeCartProduct
-);
-router.get(
-  "/QtyIncrement/:id/:price",
-  controller.userSession,
-  cartController.QtyIncrement
-);
-router.get(
-  "/QtyDecrement/:id/:price",
-  controller.userSession,
-  cartController.QtyDecrement
-);
+router.get("/removeProduct/:id/:total",controller.userSession,cartController.removeCartProduct);
+router.get("/QtyIncrement/:id/:price",controller.userSession,cartController.QtyIncrement);
+router.get("/QtyDecrement/:id/:price",controller.userSession,cartController.QtyDecrement);
 
 
 //OTP PAGE
@@ -72,6 +54,7 @@ router.get('/checkout',controller.userSession, orderController.checkout)
 router.post('/placeOrder', orderController.placeOrder);
 router.get('/orderSuccess',controller.userSession , orderController.orderSuccess)
 router.post('/checkoutNewAddress',orderController.checkoutNewAddress)
+router.post('/verifyPayment' , controller.userSession  ,orderController.verifyPayment)
 
 
 module.exports = router;

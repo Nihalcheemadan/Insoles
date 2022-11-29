@@ -15,13 +15,12 @@ router.get('/addProduct', controller.addProduct);
 router.get('/showUser',controller.showUser);
 
 router.post('/newProduct' ,controller.newProduct);
-  
+
 router.get('/showProducts',controller.showProducts); 
 
 router.get('/category',controller.category);
 
 router.get("/categoryForm",controller.categoryForm);
-
 router.post("/categoryAdd",controller.categoryAdd);
 
 router.get('/editCategory/:id',controller.editCategory);
@@ -33,10 +32,6 @@ router.post('/deleteCategory/:id',controller.deleteCategory);
 router.post('/blockUser/:id',controller.blockUser);
 
 router.post('/unblockUser/:id',controller.unblockUser);
-
-router.post('/deleteUser/:id',controller.deleteUser)
-
-router.post('/deleteProduct/:id',controller.deleteProduct)
 
 router.post('/editProduct/:id',controller.editProduct);
 
@@ -50,7 +45,6 @@ router.post('/unListProduct/:id',controller.unListProduct)
 
 router.post('/listProduct/:id',controller.listProduct)
 
-
-
+router.route('/coupon').get(controller.coupon).post(controller.addCoupon)
 
 module.exports = router;

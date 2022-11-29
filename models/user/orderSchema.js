@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   userId: {
     type:ObjectId,
     required:true,
-    ref:"userdata"
+    
 
   },
   products:[{
@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
   address: {
     type: ObjectId,
     required: true,
-    ref: "userAddress",
+    
   },
   paymentMethod: {
     type: String,

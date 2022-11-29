@@ -31,8 +31,11 @@ let transporter = nodemailer.createTransport({
 module.exports = {
   //session middleware
 
-  userSession: (req, res, next) => {
-    if (req.session.userLogin) {
+  userSession: async (req, res, next) => {
+    userId = req.session.user._id;
+
+    let user = await signupModel.findById({ _id: userId });
+    if (req.session.userLogin && user.status === "unblocked") {
       next();
     } else {
       res.redirect("/login");
@@ -43,7 +46,6 @@ module.exports = {
 
   home: async (req, res) => {
     const products = await addProduct.find();
-    const user_name = req.session.user;
     res.render("user/userHome", { products });
   },
 
@@ -265,9 +267,7 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err.message);
-        });
+      });
     }
   },
-
-  
 };

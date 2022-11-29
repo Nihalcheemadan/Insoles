@@ -61,4 +61,62 @@ module.exports = {
         res.redirect("/login/wishlist");
       });
   },
+
+  //Add item into cart
+
+  moveToCart:async (req,res)=>{
+    let userId = req.session.user._id;
+    
+    let productId = req.params.id;
+    let product = await addProduct.findById({ _id: productId });
+    let quantity = 1
+
+    let total = product.price * quantity
+
+    let cart = await cartModel.findOne({ userId: userId });
+    let wishlist = await wishlistSchema.findOne({userId: userId})
+    console.log('wishlist '+wishlist);
+ 
+    if (cart) {
+      // checking that product already exist in cart
+      let exist = await cartModel.findOne({
+        userId,
+        "products.productId": productId,
+      });
+      if (exist != null) {
+        await cartModel.findOneAndUpdate(
+          { userId, "products.productId": productId },
+          {
+            $inc: {
+              "products.$.quantity": 1,
+              "products.$.total": total,
+              cartTotal: total,
+            },
+          }
+        ).then(async()=>{
+          await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+        });
+      } else {
+        await cartModel.findOneAndUpdate(
+          { userId },
+          {
+            $push: { products: { productId, quantity, total } },
+            $inc: { cartTotal: total },
+          }
+        ).then(async()=>{
+          await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+        });
+      }
+    } else {
+      const newCart = new cartModel({
+        userId: userId,
+        products: [{ productId, quantity, total }],
+        cartTotal: total,
+      });
+      newCart.save().then(async()=>{
+        await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+      })
+    }
+    res.redirect("/login/cart");
+  }
 };

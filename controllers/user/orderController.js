@@ -1,6 +1,12 @@
 const addressSchema = require("../../models/user/addressSchema");
 const cartModel = require("../../models/user/cartModel");
 const orderSchema = require("../../models/user/orderSchema");
+const Razorpay = require("razorpay");
+
+var instance = new Razorpay({
+  key_id: "rzp_test_mp1q8YWcYr4vEC",
+  key_secret: "RV5KxjCb2F6JQwSsoMxADYxs",
+});
 
 module.exports = {
   //checkout
@@ -33,10 +39,8 @@ module.exports = {
     let adrsIndex = req.body["index"];
     console.log("adrsIndex" + adrsIndex);
     let paymentMethod = req.body["paymentMethod"];
-
     let addresses = await addressSchema.findOne({ userId });
     let address = addresses.address[adrsIndex];
-
     let cart = await cartModel.findOne({ userId });
     let total = cart.cartTotal;
     let products = cart.products;
@@ -49,13 +53,59 @@ module.exports = {
       paymentMethod,
     });
     newOrder.save().then(async () => {
-      await cartModel.findByIdAndDelete({ _id: cart._id });
-      let orderId = newOrder._id,
-        total = newOrder.total;
+      // await cartModel.findByIdAndDelete({ _id: cart._id });
+      console.log(newOrder);
     });
-
+    let orderId = newOrder._id;
+    total = newOrder.total;
+    console.log("nowkjbfwugewufiwuh" + orderId, total);
     if (paymentMethod == "COD") {
-      res.json({ codeSuccess: true });
+      await cartModel.findByIdAndDelete({ _id: cart._id });
+      res.json({ codSuccess: true });
+    } else {
+      return new Promise(async (resolve, reject) => {
+        instance.orders.create(
+          {
+            amount: total * 100,
+            currency: "INR",
+            receipt: "" + orderId,
+          },
+          function (err, order) {
+            resolve(order);
+          }
+        );
+      }).then(async (response) => {
+        res.json(response);
+      });
+    }
+  },
+
+  // verify payment
+
+  verifyPayment: async (req, res) => {
+    let cart = await cartModel.findOne({ userId });
+    if (cart) {
+      console.log(req.body);
+      const crypto = require("crypto");
+      let details = req.body;
+      let hmac = crypto.createHmac("sha256", "RV5KxjCb2F6JQwSsoMxADYxs");
+      hmac.update(
+        details.payment.razorpay_order_id +
+          "|" +
+          details.payment.razorpay_payment_id
+      );
+      hmac = hmac.digest("hex");
+      if (hmac === details.payment.razorpay_signature) {
+        let orderId = details.order.receipt;
+        await orderSchema.findOneAndUpdate(
+          { _id: orderId },
+          { $set: { paymentStatus: "paid" } }
+        );
+        await cartModel.findByIdAndDelete({ _id: cart._id });
+        res.json({ status: true });
+      }
+    } else {
+      res.json({ status: false });
     }
   },
 
@@ -65,7 +115,6 @@ module.exports = {
     let userId = req.session.user._id;
     const { fullName, houseName, city, state, pincode, phone } = req.body;
     let exist = await addressSchema.findOne({ userId: userId });
-
     if (exist) {
       await addressSchema
         .findOneAndUpdate(
@@ -95,7 +144,7 @@ module.exports = {
     }
   },
 
-  //order success 
+  //order success
 
   orderSuccess: (req, res) => {
     res.render("user/orderSuccess");

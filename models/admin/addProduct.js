@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const paginate = require('mongoose-paginate')
+
 
 const addProductSchema = new mongoose.Schema({
   category:{

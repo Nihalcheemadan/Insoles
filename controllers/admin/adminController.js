@@ -9,6 +9,7 @@ const categorySchema = require("../../models/admin/categorySchema");
 const signupModel = require("../../models/user/signupModel");
 const subCategorySchema = require("../../models/admin/subCategorySchema");
 const couponSchema = require("../../models/admin/couponSchema");
+const bannerModel = require("../../models/admin/bannerModel");
 
 module.exports = {
   // admin Login
@@ -89,18 +90,23 @@ module.exports = {
   showProducts: async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 5;
-    const totalproducts = await addProduct.find().countDocuments()
+    const totalproducts = await addProduct.find().countDocuments();
     // console.log(totalproducts);
-    const products = await addProduct.find({}).populate('category').skip((page - 1) * items_per_page).limit(items_per_page)
-    res.render("admin/showProducts", { products, index: 1, page,
-    hasNextPage: items_per_page * page < totalproducts,
-    hasPreviousPage: page > 1,
-    PreviousPage: page - 1,})
-  
+    const products = await addProduct
+      .find({})
+      .populate("category")
+      .skip((page - 1) * items_per_page)
+      .limit(items_per_page);
+    res.render("admin/showProducts", {
+      products,
+      index: 1,
+      page,
+      hasNextPage: items_per_page * page < totalproducts,
+      hasPreviousPage: page > 1,
+      PreviousPage: page - 1,
+    });
 
-
-    // let products = await addProduct.find();               
-       
+    // let products = await addProduct.find();
   },
 
   //show categroy section
@@ -362,8 +368,6 @@ module.exports = {
       });
   },
 
-
-
   //edit product page
 
   editProductForm: async (req, res) => {
@@ -384,7 +388,7 @@ module.exports = {
   editProduct: async (req, res) => {
     const id = req.params.id;
     const image = req.file;
-  
+
     const { category, subCategory, name, brand, description, price } = req.body;
 
     await addProduct
@@ -410,18 +414,32 @@ module.exports = {
         console.log(err);
       });
   },
-
-  coupon:(req,res)=>{
-    res.render('admin/couponManagement')
+  coupon: (req, res) => {
+    res.render("admin/couponManagement");
   },
-  addCoupon:async (req,res)=>{
-    let coupon = await couponSchema.find({})
-    if(coupon){
-      
-    }else{
+  addCoupon: async (req, res) => {
+    const coupon = req.body;
+    await new couponSchema(coupon).save().then(() => {
+      res.redirect("/adminLogin/coupon");
+    });
+  },
+  orders: async (req, res) => {
+    const orders = await orderSchema.find({}).populate("products.productId");
+    res.render("admin/orders", { orders });
+  },
+  banner:(req,res)=>{
+    res.render("admin/banner")
+  },
+  addBanner:async(req,res)=>{
+    const {title , discription} = req.body
+    const image = req.file;
 
-    }
-    console.log(req.body);
+    await new bannerModel({
+      title,
+      discription,
+      image:image.path
+    }).save().then(() => {
+      res.redirect("/adminLogin/coupon");
+    });
   }
-
 };

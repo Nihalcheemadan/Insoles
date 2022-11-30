@@ -47,4 +47,8 @@ router.post('/listProduct/:id',controller.listProduct)
 
 router.route('/coupon').get(controller.coupon).post(controller.addCoupon)
 
+router.get('/orders',controller.orders);
+
+router.route('/banner').get(controller.banner).post(controller.addBanner)
+
 module.exports = router;

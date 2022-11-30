@@ -15,6 +15,17 @@ const cartSchema = new mongoose.Schema({
   cartTotal:{
     type:Number,
   },
+
+  offer:{
+    couponId:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"coupon"
+    },
+    discount:{
+      type:Number,
+      default:0
+    }
+  }
   
 });
 

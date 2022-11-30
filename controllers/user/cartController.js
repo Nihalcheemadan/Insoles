@@ -1,4 +1,5 @@
 const addProduct = require("../../models/admin/addProduct");
+const couponSchema = require("../../models/admin/couponSchema");
 const cartModel = require("../../models/user/cartModel");
 
 module.exports = {
@@ -150,6 +151,43 @@ module.exports = {
       )
       .then(() => {
         res.redirect("/login/cart");
-      });
+    });
   },
+
+  checkCoupen: async (req, res) => {
+    try {
+      
+      const userId = req.session.user._id;
+      const couponCode = req.body.code;
+      const cartTotal = req.body.cartTotal;
+      const confirmCode = await couponSchema.findOne({ code: couponCode });
+      console.log(confirmCode);
+      if (confirmCode) {
+        const existOffer = await cartModel.findOne({userId:userId})
+        if (!existOffer.offer.couponId){
+        discountCoupen = Math.round(cartTotal * confirmCode.discount/ 100) 
+        console.log(discountCoupen);
+        const cart = await cartModel.findOneAndUpdate(
+          { userId: userId },
+          {
+            $set: {
+              offer:{couponId: confirmCode._id, 
+              discount : discountCoupen},
+          
+            },
+            $inc: { cartTotal: -discountCoupen },
+          },{multi : true}
+        );
+        res.json({apply:true});
+        }else{
+          res.json({exist : true})
+        }
+      }else{
+        res.json({apply : false})
+      }
+    } catch {
+      console.log("catch working");
+    }
+  },
+
 };

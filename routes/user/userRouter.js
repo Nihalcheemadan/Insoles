@@ -55,6 +55,10 @@ router.post('/placeOrder', orderController.placeOrder);
 router.get('/orderSuccess',controller.userSession , orderController.orderSuccess)
 router.post('/checkoutNewAddress',orderController.checkoutNewAddress)
 router.post('/verifyPayment' , controller.userSession  ,orderController.verifyPayment)
+router.get('/orders',controller.userSession, orderController.orders)
+router.post('/cancelOrder',controller.userSession,orderController.cancelOrder)
+
+router.post('/checkCoupen' , cartController.checkCoupen)
 
 
 module.exports = router;

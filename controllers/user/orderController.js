@@ -12,23 +12,31 @@ module.exports = {
   //checkout
 
   checkout: async (req, res) => {
-    let userId = req.session.user._id;
+    try{
 
-    let cart = await cartModel
-      .findOne({ userId: userId })
-      .populate("products.productId");
-    let address = await addressSchema.findOne({ userId });
-
-    if (cart != null && cart.products.length > 0) {
-      let cartTotal = cart.cartTotal;
-      let cartItems = cart.products;
-      address = address ? address.address : 0;
-      let length = address ? address.length : 0;
-      let index = req.body.index ? req.body.index : length - 1;
-
-      res.render("user/checkout", { cartTotal, cartItems, address, index });
-    } else {
-      res.redirect("/login/cart");
+      let userId = req.session.user._id;
+  
+      let cart = await cartModel
+        .findOne({ userId: userId })
+        .populate("products.productId");
+      let address = await addressSchema.findOne({ userId });
+  
+      if (cart != null && cart.products.length > 0) {
+        let cartTotal = cart.cartTotal;
+        let cartItems = cart.products;
+        let cartId = cart._id
+        let discount =  cart.offer.discount
+        console.log("njkdxiusaihduasi"+cart);
+        address = address ? address.address : 0;
+        let length = address ? address.length : 0;
+        let index = req.body.index ? req.body.index : length - 1;
+  
+        res.render("user/checkout", { discount ,cartId , cartTotal, cartItems, address, index });
+      } else {
+        res.redirect("/login/cart");
+      }
+    }catch{
+      res.render('error')
     }
   },
 
@@ -58,7 +66,7 @@ module.exports = {
     });
     let orderId = newOrder._id;
     total = newOrder.total;
-    console.log("nowkjbfwugewufiwuh" + orderId, total);
+
     if (paymentMethod == "COD") {
       await cartModel.findByIdAndDelete({ _id: cart._id });
       res.json({ codSuccess: true });
@@ -84,26 +92,25 @@ module.exports = {
 
   verifyPayment: async (req, res) => {
     let cart = await cartModel.findOne({ userId });
-    if (cart) {
-      console.log(req.body);
-      const crypto = require("crypto");
-      let details = req.body;
-      let hmac = crypto.createHmac("sha256", "RV5KxjCb2F6JQwSsoMxADYxs");
-      hmac.update(
-        details.payment.razorpay_order_id +
-          "|" +
-          details.payment.razorpay_payment_id
+    console.log(req.body);
+    const crypto = require("crypto");
+    let details = req.body;
+    console.log(details);
+    let hmac = crypto.createHmac("sha256", "RV5KxjCb2F6JQwSsoMxADYxs");
+    hmac.update(
+      details.payment.razorpay_order_id +
+        "|" +
+        details.payment.razorpay_payment_id
+    );
+    hmac = hmac.digest("hex");
+    if (hmac === details.payment.razorpay_signature) {
+      let orderId = details.order.receipt;
+      await orderSchema.findOneAndUpdate(
+        { _id: orderId },
+        { $set: { paymentStatus: "paid" } }
       );
-      hmac = hmac.digest("hex");
-      if (hmac === details.payment.razorpay_signature) {
-        let orderId = details.order.receipt;
-        await orderSchema.findOneAndUpdate(
-          { _id: orderId },
-          { $set: { paymentStatus: "paid" } }
-        );
-        await cartModel.findByIdAndDelete({ _id: cart._id });
-        res.json({ status: true });
-      }
+      await cartModel.findByIdAndDelete({ _id: cart._id });
+      res.json({ status: true });
     } else {
       res.json({ status: false });
     }
@@ -149,4 +156,47 @@ module.exports = {
   orderSuccess: (req, res) => {
     res.render("user/orderSuccess");
   },
+
+  //order management
+
+  orders: async (req, res) => {
+    let userId = req.session.user._id;
+    const page = parseInt(req.query.page) || 1;
+    const items_per_page = 5;
+    const totalproducts = await orderSchema.find().countDocuments();
+    const orders = await orderSchema
+      .find({userId:userId})
+      .populate("products.productId").sort({date:-1})
+      .skip((page-1)*items_per_page).limit(items_per_page)
+
+      
+
+      console.log(orders);
+      if(orders){
+        res.render("user/orders", {
+          
+          orders,
+          index: 1,
+          page,
+          hasNextPage: items_per_page * page < totalproducts,
+          hasPreviousPage: page > 1,
+          PreviousPage: page - 1,
+        });
+      }else{
+        res.render("user/orders", { orders: [] });
+      }
+    
+  },
+
+  //cancel order
+
+  cancelOrder:async(req,res)=>{
+    
+    let response = await orderSchema.findOneAndUpdate(
+      { _id: req.body['id'] },
+      { $set: { orderStatus: "Cancelled" } }
+    );
+    console.log(response);
+    res.json({status:true})
+  }
 };

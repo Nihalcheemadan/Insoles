@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const checkoutSchema = require("../../models/user/addressSchema");
 const addressSchema = require("../../models/user/addressSchema");
 const orderSchema = require("../../models/user/orderSchema");
+const bannerModel = require("../../models/admin/bannerModel");
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -46,7 +47,9 @@ module.exports = {
 
   home: async (req, res) => {
     const products = await addProduct.find();
-    res.render("user/userHome", { products });
+    const banner = await bannerModel.find()
+    console.log(banner);
+    res.render("user/userHome", { products , banner });
   },
 
   // DO_SIGNUP

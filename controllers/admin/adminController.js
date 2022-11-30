@@ -431,15 +431,55 @@ module.exports = {
     res.render("admin/banner")
   },
   addBanner:async(req,res)=>{
-    const {title , discription} = req.body
+    const {title , description} = req.body
     const image = req.file;
 
     await new bannerModel({
       title,
-      discription,
+      description,
       image:image.path
     }).save().then(() => {
-      res.redirect("/adminLogin/coupon");
+      res.redirect("/adminLogin/banner");
     });
+  },
+
+  showBanner:async (req,res)=>{
+    let banner = await bannerModel.find()
+    res.render('admin/showBanner', {banner})
+  },
+
+
+
+  editBanner:async(req,res)=>{
+    let bannerId = req.params.id
+    let banner = await bannerModel.findById({_id:bannerId})
+    res.render('admin/editBanner', {banner})
+  },
+
+  updateBanner:async(req,res)=>{
+    const id = req.params.id;
+      const {  title,description } = req.body;
+      const image = req.file;
+      const banner = await bannerModel.findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            title,
+            description,
+            
+            image: image.path,
+          },
+        }
+      );
+      banner.save().then(() => {
+        res.redirect("/adminLogin/showBanner");
+      });
+  },
+
+  deleteBanner:async(req,res)=>{
+    const id = req.params.id;
+    await bannerModel.findByIdAndDelete({_id:id}).then(()=>{
+      res.redirect('/adminLogin/showBanner')
+    })
   }
 };

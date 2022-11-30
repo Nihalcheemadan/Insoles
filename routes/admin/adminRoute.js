@@ -51,4 +51,12 @@ router.get('/orders',controller.orders);
 
 router.route('/banner').get(controller.banner).post(controller.addBanner)
 
+router.post('/editBanner/:id', controller.editBanner)
+
+router.get('/showBanner', controller.showBanner)
+
+router.post('/updateBanner/:id', controller.updateBanner)
+
+router.post('/deleteBanner/:id',controller.deleteBanner)
+
 module.exports = router;

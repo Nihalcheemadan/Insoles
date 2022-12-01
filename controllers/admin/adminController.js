@@ -10,8 +10,9 @@ const signupModel = require("../../models/user/signupModel");
 const subCategorySchema = require("../../models/admin/subCategorySchema");
 const couponSchema = require("../../models/admin/couponSchema");
 const bannerModel = require("../../models/admin/bannerModel");
-const moment = require('moment');
+const moment = require("moment");
 const orderSchema = require("../../models/user/orderSchema");
+
 
 module.exports = {
   // admin Login
@@ -26,49 +27,34 @@ module.exports = {
     res.render("admin/home");
   },
 
-  //admin signup
-
-  signup: (req, res, next) => {
-    const newUser = adminSignup({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
-    });
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser
-          .save()
-          .then(() => {
-            console.log(newUser);
-            res.redirect("/login");
-          })
-          .catch((err) => {
-            console.log(err);
-            res.redirect("/login");
-          });
-      });
-    });
-  },
-
   //admin signin
 
   signin: async (req, res, next) => {
-    req.session.adminLogin = false;
-    const { email, password } = req.body;
-    const user = await adminSignup.findOne({ email });
-    if (!user) {
-      return res.redirect("/adminLogin");
-    }
+    req.session.loginErr = false;
+    req.session.passwordErr = false;
+    let userData = req.body;
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.redirect("/adminLogin");
+    let user = await signupModel.findOne({
+      $and: [{ email: userData.email }, { type: "admin" }],
+    });
+    if (user) {
+      bcrypt.compare(userData.password, user.password).then((status) => {
+        if (status) {
+          console.log("login success");
+
+          req.session.adminLogin = true;
+          res.redirect("/adminLogin/adminHome");
+        } else {
+          console.log("login failed! password miss match.");
+          req.session.passwordErr = true;
+          res.redirect("/adminLogin");
+        }
+      });
+    } else {
+      console.log("login failed, no such email");
+      req.session.passwordErr = true;
+      res.redirect("/adminLogin");
     }
-    req.session.adminLogin = true;
-    res.render("admin/home");
   },
 
   //add product page
@@ -429,82 +415,138 @@ module.exports = {
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 8;
     const totalproducts = await orderSchema.find().countDocuments();
-    const orders = await orderSchema.find({}).populate("products.productId").populate('userId').sort({date:-1}).skip((page-1)*items_per_page).limit(items_per_page)
-    
-    res.render("admin/orders", { orders , moment , index: 1,
+    const orders = await orderSchema
+      .find({})
+      .populate("products.productId")
+      .populate("userId")
+      .sort({ date: -1 })
+      .skip((page - 1) * items_per_page)
+      .limit(items_per_page);
+
+    res.render("admin/orders", {
+      orders,
+      moment,
+      index: 1,
       page,
       hasNextPage: items_per_page * page < totalproducts,
       hasPreviousPage: page > 1,
-      PreviousPage: page - 1,});
+      PreviousPage: page - 1,
+    });
   },
 
-  changeStatus:async(req,res)=>{
-    const {status , orderId , productId} = req.body
-    if(status == "Order Placed"){
-      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Packed"}})
-    }else if(status == "Packed"){
-      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Shipped"}})
-    }else if(status == "Shipped"){
-      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Delivered" , "paymentStatus":"Paid"}})
-    }else{
-      await orderSchema.findByIdAndUpdate({_id:orderId,"products.productId":productId},{$set:{"orderStatus":"Cancelled" , "paymentStatus":"Unpaid"}} )
+  // invoicePage:(req,res)=>{
+    
+  
+  //   res.render('admin/invoice')
+  // },
+
+  invoice:async(req,res)=>{
+
+    
+    let orderId =  req.params.id
+    console.log(orderId);
+
+    let order = await orderSchema.findOne({_id:orderId}).populate('products.productId').populate('userId').populate('address')
+  
+    
+    const products = order.products
+    const address = order.address;
+    res.render('admin/invoice',{order, address, products , moment})
+    // res.render('admin/invoice2',{order, address, products , moment})
+
+  },
+
+  changeStatus: async (req, res) => {
+    const { status, orderId, productId } = req.body;
+    if (status == "Order Placed") {
+      await orderSchema.updateOne(
+        { _id: orderId, "products.productId": productId },
+        { $set: { "products.$.orderStatus": "Packed" } }
+      );
+    } else if (status == "Packed") {
+      await orderSchema.updateOne(
+        { _id: orderId, "products.productId": productId },
+        { $set: { "products.$.orderStatus": "Shipped" } }
+      );
+    } else if (status == "Shipped") {
+      await orderSchema.updateOne(
+        { _id: orderId, "products.productId": productId },
+        {
+          $set: {
+            "products.$.orderStatus": "Delivered",
+            "products.$.paymentStatus": "Paid",
+          },
+        },
+        { multi: true }
+      );
+    } else {
+      await orderSchema.updateOne(
+        { _id: orderId, "products.productId": productId },
+        {
+          $set: {
+            "products.$.orderStatus": "Cancelled",
+            "products.$.paymentStatus": "Unpaid",
+          },
+        },
+        { multi: true }
+      );
     }
     res.json({ success: "success" });
   },
 
-  banner:(req,res)=>{
-    res.render("admin/banner")
+  banner: (req, res) => {
+    res.render("admin/banner");
   },
-  addBanner:async(req,res)=>{
-    const {title , description} = req.body
+  addBanner: async (req, res) => {
+    const { title, description } = req.body;
     const image = req.file;
 
     await new bannerModel({
       title,
       description,
-      image:image.path
-    }).save().then(() => {
-      res.redirect("/adminLogin/banner");
-    });
-  },
-
-  showBanner:async (req,res)=>{
-    let banner = await bannerModel.find()
-    res.render('admin/showBanner', {banner})
-  },
-
-
-
-  editBanner:async(req,res)=>{
-    let bannerId = req.params.id
-    let banner = await bannerModel.findById({_id:bannerId})
-    res.render('admin/editBanner', {banner})
-  },
-
-  updateBanner:async(req,res)=>{
-    const id = req.params.id;
-      const {  title,description } = req.body;
-      const image = req.file;
-      const banner = await bannerModel.findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            title,
-            description,
-            
-            image: image.path,
-          },
-        }
-      );
-      banner.save().then(() => {
-        res.redirect("/adminLogin/showBanner");
+      image: image.path,
+    })
+      .save()
+      .then(() => {
+        res.redirect("/adminLogin/banner");
       });
   },
 
-  deleteBanner:async(req,res)=>{
+  showBanner: async (req, res) => {
+    let banner = await bannerModel.find();
+    res.render("admin/showBanner", { banner });
+  },
+
+  editBanner: async (req, res) => {
+    let bannerId = req.params.id;
+    let banner = await bannerModel.findById({ _id: bannerId });
+    res.render("admin/editBanner", { banner });
+  },
+
+  updateBanner: async (req, res) => {
     const id = req.params.id;
-    await bannerModel.findByIdAndDelete({_id:id}).then(()=>{
-      res.redirect('/adminLogin/showBanner')
-    })
-  }
+    const { title, description } = req.body;
+    const image = req.file;
+    const banner = await bannerModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          title,
+          description,
+
+          image: image.path,
+        },
+      }
+    );
+    banner.save().then(() => {
+      res.redirect("/adminLogin/showBanner");
+    });
+  },
+
+  deleteBanner: async (req, res) => {
+    const id = req.params.id;
+    await bannerModel.findByIdAndDelete({ _id: id }).then(() => {
+      res.redirect("/adminLogin/showBanner");
+    });
+  },
 };

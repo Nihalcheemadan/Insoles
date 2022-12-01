@@ -12,30 +12,37 @@ const orderModel = new mongoose.Schema({
       productId: { type: ObjectId, ref: "product" },
       quantity: { type: Number },
       total: { type: Number, required: true },
+      paymentStatus: {
+        type: String,
+        default: "Pending",
+        enum: ["Pending" , "Paid" ,"Unpaid"]
+      },
+      orderStatus: {
+        type: String,
+        default: "Order Placed",
+        enum: ["Order Placed", "Packed",  "Shipped", "Delivered", "Cancelled"],
+      },
+
     },
   ],
   total: {
     type: Number,
     required: true,
   },
+  discount: {
+    type: Number,
+    default: 0
+  },
   address: {
     type: ObjectId,
     required: true,
+    ref:"userAddress"
   },
   paymentMethod: {
     type: String,
     required: true,
   },
-  paymentStatus: {
-    type: String,
-    default: "Pending",
-    enum: ["Pending" , "Paid" ,"Unpaid"]
-  },
-  orderStatus: {
-    type: String,
-    default: "Order Placed",
-    enum: ["Order Placed", "Packed",  "Shipped", "Delivered", "Cancelled"],
-  },
+ 
   date: {
     type: Date,
     default: Date.now(),

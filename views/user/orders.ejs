@@ -1,5 +1,4 @@
-
-    <%- include('../userHeader.ejs') -%>
+<%- include('../userHeader.ejs') -%>
 
 <div class="container " style="margin-bottom: 150px;">
     <div class="main-body mt-5  " id="main">
@@ -64,16 +63,15 @@
                 <div style="width:100%;" class="d-flex justify-content-around align-items-around">
                     
 
-                        <input type="hidden" name="stat" class="stat class" value="<%= order.orderStatus  %>">
+                        <input type="hidden" name="stat" class="stat class" value="<%= x.orderStatus  %>">
                         
                         <div style="width: 20%;" id="status1">
                             <p id="Status_i" style="margin-left: 55px;" class="OrderStatus text-center text-success">
-                                <%= order.orderStatus  %> </p>
+                                <%= x.orderStatus  %> </p>
                         </div>
-                       
                         <div class="d-flex justify-content-center" style="width: 20%;">
 
-                            <span style="margin-left: 25px;" class="text-center ms-3"><%= order.total   %></span>
+                            <span style="margin-left: 25px;" class="text-center ms-3"><%= x.productId.price  %></span>
                         </div>
                         
                         <div class="d-flex justify-content-center" style="width: 20%; ">
@@ -84,32 +82,9 @@
                             <li style="margin-right: 35px;"> <a href="/login/productdetail/<%= x.productId._id %>" class="">
                                     <i class="fa fa-eye" aria-hidden="false"></i></a></li>
                         </div>
-                       
-                        <!-- <div class="d-flex justify-content-center" style="width: 15%;">
-                            <li style=""> <button onclick="returnorder('{{this.id}}')" class="">
-                                </button></li>
-                        </div>
-                        
-                        <div class="d-flex justify-content-center" style="width: 15%;">
-                            <li style=""> <button onclick="returnorder('{{this.id}}')" class=""> <img
-                                        src="https://static.thenounproject.com/png/575813-200.png"
-                                        style="width: 30px;height: 30px;">
-                                </button></li>
-                        </div>
-                        
-                        <div class="d-flex justify-content-center" style="width: 15%;">
-                            <li style=""> <button onclick="cancelorder('{{this.id}}')" class=""> <i style="color: red;"
-                                        class=" fa fa-ban" aria-hidden="true"></i>
-                                </button></li>
-                        </div> -->
                 </div>
-                
-
-
-                
-
                 <div class="d-flex justify-content-center" style="width: 15%;">
-                    <li style="margin-right: 35px;"> <button onclick="cancelorder('<%= order._id %>','<%= x.productId._id %>','<%= order.OrderStatus %>')" class=""> <i style="color: red;"
+                    <li style="margin-right: 35px;"> <button onclick="cancelorder('<%= order._id %>','<%= x.productId._id %>')" class=""> <i style="color: red;"
                         class=" fa fa-ban" aria-hidden="true"></i>
                     </button></li>
                 </div>
@@ -154,8 +129,7 @@
 </div>
 <script>
     
-    function cancelorder(id , productId ,status) {
-
+    function cancelorder(id , productId ) {
         if(confirm('Do you want to cancel the order')){
             var div=$('#card').html();
             $.ajax({
@@ -163,7 +137,7 @@
           data: {
             id,
             productId,
-            status
+           
           },
           method: "post",
           success: (response) => {
@@ -177,19 +151,14 @@
             } 
           },
         });
-        }else{
-            
+        } else {
               Swal.fire({
                 icon: "success",
                 title: "cancelled",
                 text: "cancelled",
               });
-            
         }
-        
     }
-    
-
 </script>
 
 <script>

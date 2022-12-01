@@ -50,14 +50,19 @@ module.exports = {
     let paymentMethod = req.body["paymentMethod"];
     let addresses = await addressSchema.findOne({ userId });
     let address = addresses.address[adrsIndex];
-    let cart = await cartModel.findOne({ userId });
+    let cart = await cartModel.findOne({ userId }).populate('offer')
     let total = cart.cartTotal;
+    console.log(total);
     let products = cart.products;
+    let discount = cart.offer.discount
+    console.log("discountnuidauisdhiusa"+discount);
+
 
     const newOrder = new orderSchema({
       userId,
       products,
       total,
+      discount,
       address,
       paymentMethod,
     });
@@ -67,6 +72,7 @@ module.exports = {
     });
     let orderId = newOrder._id;
     total = newOrder.total;
+    console.log("jksudduasf"+total);
 
     if (paymentMethod == "COD") {
       await cartModel.findByIdAndDelete({ _id: cart._id });
@@ -108,7 +114,7 @@ module.exports = {
       let orderId = details.order.receipt;
       await orderSchema.findOneAndUpdate(
         { _id: orderId },
-        { $set: { paymentStatus: "paid" } }
+        { $set: { "products.$.paymentStatus": "paid" } }
       );
       await cartModel.findByIdAndDelete({ _id: cart._id });
       res.json({ status: true });
@@ -193,11 +199,9 @@ module.exports = {
 
   cancelOrder:async(req,res)=>{
     let productId= req.body.productId
-    console.log("sidhiufasiugiudg"+productId);
-    console.log(req.body.status);
-    let response = await orderSchema.findOneAndUpdate(
+    let response = await orderSchema.updateOne(
       { _id: req.body['id'] , "products.productId":productId },
-      { $set: { orderStatus: "Cancelled" } }
+      { $set: { 'products.$.orderStatus': "Cancelled" } }
     );
     console.log(response);
     res.json({status:true})

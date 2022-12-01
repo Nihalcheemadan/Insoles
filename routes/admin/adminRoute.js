@@ -4,8 +4,6 @@ const controller = require('../../controllers/admin/adminController')
 
 router.get('/', controller.adminLogin);
 
-router.post('/signup' , controller.signup);
-
 router.get('/adminHome', controller.adminHome)
 
 router.post('/admin', controller.signin);
@@ -21,6 +19,7 @@ router.get('/showProducts',controller.showProducts);
 router.get('/category',controller.category);
 
 router.get("/categoryForm",controller.categoryForm);
+
 router.post("/categoryAdd",controller.categoryAdd);
 
 router.get('/editCategory/:id',controller.editCategory);
@@ -60,5 +59,9 @@ router.post('/updateBanner/:id', controller.updateBanner)
 router.post('/deleteBanner/:id',controller.deleteBanner)
 
 router.post('/changeStatus',controller.changeStatus)
+
+router.post('/invoice/:id' , controller.invoice)
+
+// router.get('/invoicePage' , controller.invoicePage)
 
 module.exports = router;

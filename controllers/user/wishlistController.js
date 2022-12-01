@@ -94,7 +94,7 @@ module.exports = {
             },
           }
         ).then(async()=>{
-          await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+          await wishlistSchema.findOneAndUpdate({userId:userId} , {$pull:{productIds:productId}})
         });
       } else {
         await cartModel.findOneAndUpdate(
@@ -104,7 +104,7 @@ module.exports = {
             $inc: { cartTotal: total },
           }
         ).then(async()=>{
-          await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+          await wishlistSchema.findOneAndUpdate({userId:userId} , {$pull:{productIds:productId}})
         });
       }
     } else {
@@ -114,7 +114,7 @@ module.exports = {
         cartTotal: total,
       });
       newCart.save().then(async()=>{
-        await wishlistSchema.findByIdAndDelete({_id:wishlist._id})
+        await wishlistSchema.findOneAndUpdate({userId:userId} , {$pull:{productIds:productId}})
       })
     }
     res.redirect("/login/cart");

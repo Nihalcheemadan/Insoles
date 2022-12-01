@@ -2,6 +2,7 @@ const addressSchema = require("../../models/user/addressSchema");
 const cartModel = require("../../models/user/cartModel");
 const orderSchema = require("../../models/user/orderSchema");
 const Razorpay = require("razorpay");
+const moment = require('moment')
 
 var instance = new Razorpay({
   key_id: "rzp_test_mp1q8YWcYr4vEC",
@@ -174,7 +175,7 @@ module.exports = {
       console.log(orders);
       if(orders){
         res.render("user/orders", {
-          
+          moment,
           orders,
           index: 1,
           page,
@@ -191,9 +192,11 @@ module.exports = {
   //cancel order
 
   cancelOrder:async(req,res)=>{
-    
+    let productId= req.body.productId
+    console.log("sidhiufasiugiudg"+productId);
+    console.log(req.body.status);
     let response = await orderSchema.findOneAndUpdate(
-      { _id: req.body['id'] },
+      { _id: req.body['id'] , "products.productId":productId },
       { $set: { orderStatus: "Cancelled" } }
     );
     console.log(response);

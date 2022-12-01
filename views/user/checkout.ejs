@@ -617,7 +617,7 @@
           method: "post",
           success: (response) => {
             if (response.apply) {
-              location.reload("#checkout");
+              window.location.reload()
               Swal.fire({
                 icon: "success",
                 title: "Success",

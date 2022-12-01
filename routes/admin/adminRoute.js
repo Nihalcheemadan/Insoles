@@ -59,4 +59,6 @@ router.post('/updateBanner/:id', controller.updateBanner)
 
 router.post('/deleteBanner/:id',controller.deleteBanner)
 
+router.post('/changeStatus',controller.changeStatus)
+
 module.exports = router;

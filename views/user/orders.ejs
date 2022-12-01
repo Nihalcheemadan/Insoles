@@ -77,7 +77,7 @@
                         </div>
                         
                         <div class="d-flex justify-content-center" style="width: 20%; ">
-                            <li style="margin-left: 25px;"><%= order.date  %></li>
+                            <li style="margin-left: 25px;"><%= moment(order.date).format("LL")  %></li>
                         </div>
                         
                         <div class="d-flex justify-content-center" style="width: 15%;">
@@ -109,7 +109,7 @@
                 
 
                 <div class="d-flex justify-content-center" style="width: 15%;">
-                    <li style="margin-right: 35px;"> <button onclick="cancelorder('<%= order._id %>')" class=""> <i style="color: red;"
+                    <li style="margin-right: 35px;"> <button onclick="cancelorder('<%= order._id %>','<%= x.productId._id %>','<%= order.OrderStatus %>')" class=""> <i style="color: red;"
                         class=" fa fa-ban" aria-hidden="true"></i>
                     </button></li>
                 </div>
@@ -153,43 +153,27 @@
 </div>
 </div>
 <script>
-    // function cancelorder(id) {
-    //     //  return swal.("are you sure")
-    //     swal({
-    //         title: "Are you sure?",
-    //         text: "Once you Cancelled, you will not be able to recover this action!",
-    //         icon: "warning",
-    //         buttons: true,
-    //         dangerMode: true,
-    //     })
-    //         .then((willDelete) => {
-    //             if (willDelete) {
-    //                 swal("This Order is Cancelling.!", {
-    //                     icon: "warning"
-    //                 });
-    //                 location.assign(`/cancel-order/${id}`);
-    //             }
-    //         });
-
-    // }
-    function cancelorder(id) {
+    
+    function cancelorder(id , productId ,status) {
 
         if(confirm('Do you want to cancel the order')){
             var div=$('#card').html();
             $.ajax({
           url: "/login/cancelOrder",
           data: {
-            id
+            id,
+            productId,
+            status
           },
           method: "post",
           success: (response) => {
               if (response.status) {
-                //   Swal.fire({
-                //       icon: "success",
-                //       title: "Order cancelled ",
-                //       text: "order cancelled",
-                //     });
-                $('#card').html(div);
+                  Swal.fire({
+                      icon: "success",
+                      title: "Order cancelled ",
+                      text: "order cancelled",
+                    });
+                window.location.reload()
             } 
           },
         });
@@ -204,22 +188,7 @@
         }
         
     }
-    // function returnorder(id) {
-    //     swal({
-    //         title: "Are you sure?",
-    //         text: "Do you Want to return this Order!",
-    //         icon: "warning",
-    //         buttons: true,
-    //         dangerMode: true,
-    //     })
-    //         .then((willDelete) => {
-    //             if (willDelete) {
-
-    //                 location.assign(`/return-order/${id}`);
-    //             }
-    //         });
-
-    // }
+    
 
 </script>
 

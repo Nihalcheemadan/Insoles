@@ -5,6 +5,7 @@ const orderModel = new mongoose.Schema({
   userId: {
     type: ObjectId,
     required: true,
+    ref:"userdata"
   },
   products: [
     {
@@ -28,11 +29,12 @@ const orderModel = new mongoose.Schema({
   paymentStatus: {
     type: String,
     default: "Pending",
+    enum: ["Pending" , "Paid" ,"Unpaid"]
   },
   orderStatus: {
     type: String,
     default: "Order Placed",
-    enum: ["Order Placed", "Shipped", "Delivered", "Cancelled"],
+    enum: ["Order Placed", "Packed",  "Shipped", "Delivered", "Cancelled"],
   },
   date: {
     type: Date,

@@ -10,6 +10,8 @@ const signupModel = require("../../models/user/signupModel");
 const subCategorySchema = require("../../models/admin/subCategorySchema");
 const couponSchema = require("../../models/admin/couponSchema");
 const bannerModel = require("../../models/admin/bannerModel");
+const moment = require('moment');
+const orderSchema = require("../../models/user/orderSchema");
 
 module.exports = {
   // admin Login
@@ -424,9 +426,32 @@ module.exports = {
     });
   },
   orders: async (req, res) => {
-    const orders = await orderSchema.find({}).populate("products.productId");
-    res.render("admin/orders", { orders });
+    const page = parseInt(req.query.page) || 1;
+    const items_per_page = 8;
+    const totalproducts = await orderSchema.find().countDocuments();
+    const orders = await orderSchema.find({}).populate("products.productId").populate('userId').sort({date:-1}).skip((page-1)*items_per_page).limit(items_per_page)
+    
+    res.render("admin/orders", { orders , moment , index: 1,
+      page,
+      hasNextPage: items_per_page * page < totalproducts,
+      hasPreviousPage: page > 1,
+      PreviousPage: page - 1,});
   },
+
+  changeStatus:async(req,res)=>{
+    const {status , orderId , productId} = req.body
+    if(status == "Order Placed"){
+      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Packed"}})
+    }else if(status == "Packed"){
+      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Shipped"}})
+    }else if(status == "Shipped"){
+      await orderSchema.findByIdAndUpdate({_id:orderId , "products.productId":productId},{$set:{"orderStatus":"Delivered" , "paymentStatus":"Paid"}})
+    }else{
+      await orderSchema.findByIdAndUpdate({_id:orderId,"products.productId":productId},{$set:{"orderStatus":"Cancelled" , "paymentStatus":"Unpaid"}} )
+    }
+    res.json({ success: "success" });
+  },
+
   banner:(req,res)=>{
     res.render("admin/banner")
   },

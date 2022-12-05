@@ -54,6 +54,16 @@ router.post('/editBanner/:id', controller.editBanner)
 
 router.get('/showBanner', controller.showBanner)
 
+
+router.get('/showCoupon', controller.showCoupon)
+
+router.post('/editCoupon/:id', controller.editCoupon)
+
+router.post('/updateCoupon/:id', controller.updateCoupon)
+
+router.post('/deleteCoupon/:id',controller.deleteCoupon)
+
+
 router.post('/updateBanner/:id', controller.updateBanner)
 
 router.post('/deleteBanner/:id',controller.deleteBanner)

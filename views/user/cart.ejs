@@ -2,7 +2,7 @@
     
     <% if(products.length==0){ %>
       <div class="text-center">
-        <a href="/login/userHome"><img src="/public/images/empty.webp" alt="empty-cart" style=" height:100vh;"></a>
+        <a href="/userHome"><img src="/public/images/empty.webp" alt="empty-cart" style=" height:100vh;"></a>
       </div>
       <% }else{ %>
 
@@ -45,7 +45,7 @@
                 <tbody id="cartItem">
                   <tr class="text-center">
                     <td class="product-remove">
-                      <a  href="/login/removeProduct/<%= x.productId._id %>/<%= x.total %>"
+                      <a  href="/removeProduct/<%= x.productId._id %>/<%= x.total %>"
                         ><span class="ion-ios-close"></span
                       ></a>
                     </td>
@@ -63,7 +63,7 @@
                     </td>
 
                     <td class="price"><%= x.productId.price %></td>
-                    <!-- href="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  "   href="/login/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> "  -->
+                    <!-- href="/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  "   href="/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> "  -->
                     <td class="quantity">
                       <div class="input-group mb-3">
                         <a onclick="QtyDecrement('<%= x.productId._id %>','<%= x.productId.price %>')" >
@@ -135,7 +135,7 @@
             </div>
 
             <p class="text-center">
-              <a href="/login/checkout" class="btn btn-primary py-3 px-4"
+              <a href="/checkout" class="btn btn-primary py-3 px-4"
                 >Proceed to Checkout</a
               >
             </p>
@@ -308,7 +308,7 @@
       function QtyIncrement(productId, price) {
         console.log(productId);
         $.ajax({
-          url: "/login/QtyIncrement",
+          url: "/QtyIncrement",
           data: {
             productId,
             price
@@ -324,7 +324,7 @@
       function QtyDecrement(productId, price) {
         console.log(productId);
         $.ajax({
-          url: "/login/QtyDecrement",
+          url: "/QtyDecrement",
           data: {
             productId,
             price

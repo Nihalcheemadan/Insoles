@@ -142,7 +142,7 @@
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
             <li class="menu-item ">
-              <a href="/adminLogin/adminHome" class="menu-link">
+              <a href="/admin/adminHome" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
@@ -157,17 +157,17 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="/adminLogin/addProduct" class="menu-link">
+                  <a href="/admin/addProduct" class="menu-link">
                     <div data-i18n="Without menu">Add Products</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/adminLogin/showProducts" class="menu-link">
+                  <a href="/admin/showProducts" class="menu-link">
                     <div data-i18n="Without navbar">Show Products</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/adminLogin/category" class="menu-link">
+                  <a href="/admin/category" class="menu-link">
                     <div data-i18n="Container">Category</div>
                   </a>
                 </li>
@@ -185,7 +185,7 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="/adminLogin/showUser" class="menu-link">
+                  <a href="/admin/showUser" class="menu-link">
                     <div data-i18n="Without menu">Show Users</div>
                   </a>
                 </li>
@@ -324,7 +324,7 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/adminLogin">
+                      <a class="dropdown-item" href="/admin">
                         <i class="bx bx-power-off me-2"></i>
                         <span class="align-middle">Log Out</span>
                       </a>
@@ -353,7 +353,7 @@
                   <div class="card mb-4">
                     <div class="card-body">
                       <form
-                        action="/adminLogin/editProduct/<%= singleProduct._id %>"
+                        action="/admin/editProduct/<%= singleProduct._id %>"
                         method="post"
                         enctype="multipart/form-data"
                       >

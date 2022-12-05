@@ -79,7 +79,7 @@
                         </div>
                         <% if( x.orderStatus == "Delivered"  ) %>
                         <div class="d-flex justify-content-center" style="width: 15%;">
-                            <li style="margin-right: 35px;"> <a href="/login/productdetail/<%= x.productId._id %>" class="">
+                            <li style="margin-right: 35px;"> <a href="/productdetail/<%= x.productId._id %>" class="">
                                     <i class="fa fa-eye" aria-hidden="false"></i></a></li>
                         </div>
                 </div>
@@ -120,16 +120,16 @@
             <section class="d-flex justify-content-center mt-2">
                 <% if(hasPreviousPage){ %>
                   <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:rgb(223, 54, 54)" class="text-center"
-                    href="/login/orders?page=<%= PreviousPage %>"><i class="fa-solid fa-chevron-left"
+                    href="/orders?page=<%= PreviousPage %>"><i class="fa-solid fa-chevron-left"
                       aria-hidden="true"></i></a>
                   <% } %>
                     <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:black; border: 1px solid black;"
-                      href="/login/orders?page=<%= page %>">
+                      href="/orders?page=<%= page %>">
                       <%= page %>
                     </a>
                     <% if(hasNextPage) { %>
                       <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:black;"
-                        href="/login/orders?page=<%=  page+1 %>"><i class="fa-solid fa-chevron-right"
+                        href="/orders?page=<%=  page+1 %>"><i class="fa-solid fa-chevron-right"
                           aria-hidden="true"></i></a>
                       <% } %>
                 </section>
@@ -148,7 +148,7 @@
         if(confirm('Do you want to cancel the order')){
             
             $.ajax({
-          url: "/login/cancelOrder",
+          url: "/cancelOrder",
           data: {
             id,
             productId,

@@ -68,7 +68,7 @@
       id="ftco-navbar"
     >
       <div class="container">
-        <a class="navbar-brand" href="/login/userHome">Insoles</a>
+        <a class="navbar-brand" href="/userHome">Insoles</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -84,7 +84,7 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-              <a href="/login/userHome" class="nav-link">Home</a>
+              <a href="/userHome" class="nav-link">Home</a>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -123,16 +123,16 @@
                 >Account</a
               >
               <div class="dropdown-menu" aria-labelledby="dropdown04">
-                <a class="dropdown-item" href="/login/profile">PROFILE</a>
-                <a class="dropdown-item" href="/login/logout">LOGOUT</a>
+                <a class="dropdown-item" href="/profile">PROFILE</a>
+                <a class="dropdown-item" href="/logout">LOGOUT</a>
               </div>
             </li>
 
             <li class="nav-item">
-              <a href="/login/wishlist" class="nav-link">Wishlist</a>
+              <a href="/wishlist" class="nav-link">Wishlist</a>
             </li>
             <li class="nav-item cta cta-colored">
-              <a href="/login/cart" class="nav-link"
+              <a href="/cart" class="nav-link"
                 ><span class="icon-shopping_cart"></span>[0]</a
               >
             </li>
@@ -144,11 +144,11 @@
     <div class="m-t-70 d-none d-lg-block" style="margin-top: 105px"></div>
     <!-- <div class="container ">
         <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-            <a href="/login/userHome" class="stext-109 cl8 hov-cl1 trans-04">
+            <a href="/userHome" class="stext-109 cl8 hov-cl1 trans-04">
                 Home
                 <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
             </a>
-            <a href="/login/cart" class="stext-109 cl8 hov-cl1 trans-04">
+            <a href="/cart" class="stext-109 cl8 hov-cl1 trans-04">
                 Cart
                 <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
             </a>
@@ -215,7 +215,7 @@
                 </tr>
               </table>
               <div class="collapse" id="collapseExample">
-                <form action="/login/changeAddress" method="post">
+                <form action="/changeAddress" method="post">
                   <div class="card card-body">
                     <% address.forEach(function(address,index){ %>
                     <div class="form-check card card-body">
@@ -279,7 +279,7 @@
                 <div class="collapse" id="newAddress">
                   <div class="card card-body mt-4">
                     <form
-                      action="/login/checkoutNewAddress"
+                      action="/checkoutNewAddress"
                       class="mb-0"
                       method="post"
                     >
@@ -535,7 +535,7 @@
           : "Razorpay";
 
         $.ajax({
-          url: "/login/placeOrder",
+          url: "/placeOrder",
           data: {
             index: num,
             paymentMethod: paymentMethod,
@@ -543,7 +543,7 @@
           method: "post",
           success: (response) => {
             if (response.codSuccess) {
-              location.href = "/login/orderSuccess";
+              location.href = "/orderSuccess";
             } else {
               razorpayPayment(response);
             }
@@ -584,7 +584,7 @@
       }
       function verifyPayment(payment, order) {
         $.ajax({
-          url: "/login/verifyPayment",
+          url: "/verifyPayment",
           data: {
             payment,
             order,
@@ -592,7 +592,7 @@
           method: "post",
           success: (response) => {
             if (response.status) {
-              location.href = "/login/orderSuccess";
+              location.href = "/orderSuccess";
             } else {
               Swal.fire({
                 icon: "error",
@@ -608,7 +608,7 @@
       function getcoupen(cartTotal, cartId) {
         const code = document.querySelector("#codeInput").value;
         $.ajax({
-          url: "/login/checkCoupen",
+          url: "/checkCoupen",
           data: {
             cartTotal,
             cartId,

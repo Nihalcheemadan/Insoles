@@ -155,13 +155,15 @@
         <hr />
 
         <% products.forEach((pro,count)=>{ %>
+          
         <div class="row mt-2 p-2">
           <div class="col-2"><%=count+=1 %></div>
           <div class="col-4 font-monospace"><%= pro.productId.name %></div>
           <div class="col-2"><%= pro.productId.price %></div>
           <div class="col-2"><%= pro.quantity %></div>
-          <div class="col-2"><%= pro.total %></div>
+          <div class="col-2"><%= pro.total  %></div>
         </div>
+        
         <% }) %>
         <hr />
         <div class="row d-flex justify-content-end me-3">
@@ -177,10 +179,15 @@
               </div>
             </div>
             <hr />
+            
+              
             <div class="row">
               <div class="fw-bold col-8">Total Price</div>
               <div class="text-end fw-bold col-4"><%= order.total %></div>
             </div>
+            
+       
+        
           </div>
         </div>
       </div>

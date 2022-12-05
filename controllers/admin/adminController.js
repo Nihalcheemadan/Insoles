@@ -43,17 +43,17 @@ module.exports = {
           console.log("login success");
 
           req.session.adminLogin = true;
-          res.redirect("/adminLogin/adminHome");
+          res.redirect("/admin/adminHome");
         } else {
           console.log("login failed! password miss match.");
           req.session.passwordErr = true;
-          res.redirect("/adminLogin");
+          res.redirect("/admin");
         }
       });
     } else {
       console.log("login failed, no such email");
       req.session.passwordErr = true;
-      res.redirect("/adminLogin");
+      res.redirect("/admin");
     }
   },
 
@@ -132,7 +132,7 @@ module.exports = {
       )
 
       .then(() => {
-        res.redirect("/adminLogin/category");
+        res.redirect("/admin/category");
       })
       .catch((err) => {
         console.log(err);
@@ -144,7 +144,7 @@ module.exports = {
   deleteCategory: async (req, res, next) => {
     let id = req.params.id;
     await subCategorySchema.findByIdAndRemove({ _id: id }).then(() => {
-      res.redirect("/adminLogin/category");
+      res.redirect("/admin/category");
     });
   },
 
@@ -171,17 +171,17 @@ module.exports = {
             category: req.body.category,
           });
           const sub_cat_data = await category.save().then(() => {
-            res.redirect("/adminLogin/category");
+            res.redirect("/admin/category");
           });
         } else {
-          res.redirect("/adminLogin/category");
+          res.redirect("/admin/category");
         }
       } else {
         const category = new categorySchema({
           category: req.body.category,
         });
         const sub_cat_data = await category.save().then(() => {
-          res.redirect("/adminLogin/category");
+          res.redirect("/admin/category");
         });
       }
     } catch (error) {
@@ -222,10 +222,10 @@ module.exports = {
             imageUrl: image.path,
           });
           const sub_cat_data = await subCategory.save().then(() => {
-            res.redirect("/adminLogin/category");
+            res.redirect("/admin/category");
           });
         } else {
-          res.redirect("/adminLogin/category");
+          res.redirect("/admin/category");
         }
       } else {
         const subCategory = new subCategorySchema({
@@ -234,7 +234,7 @@ module.exports = {
           imageUrl: image.path,
         });
         const sub_cat_data = await subCategory.save().then(() => {
-          res.redirect("/adminLogin/category");
+          res.redirect("/admin/category");
         });
       }
     } catch (error) {
@@ -259,6 +259,7 @@ module.exports = {
   // adding new product
 
   newProduct: async (req, res, next) => {
+    
     const { category, subCategory, name, brand, description, price } = req.body;
     const image = req.file;
 
@@ -276,7 +277,7 @@ module.exports = {
       .save()
       .then(() => {
         console.log(newProduct);
-        res.redirect("/adminLogin/addProduct");
+        res.redirect("/admin/addProduct");
       })
       .catch((err) => {
         console.log(err.message);
@@ -298,7 +299,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/adminLogin/showUser");
+        res.redirect("/admin/showUser");
       });
   },
 
@@ -316,7 +317,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/adminLogin/showUser");
+        res.redirect("/admin/showUser");
       });
   },
 
@@ -334,7 +335,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/adminLogin/showProducts");
+        res.redirect("/admin/showProducts");
       });
   },
 
@@ -352,7 +353,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/adminLogin/showProducts");
+        res.redirect("/admin/showProducts");
       });
   },
 
@@ -396,7 +397,7 @@ module.exports = {
       )
 
       .then(() => {
-        res.redirect("/adminLogin/showProducts");
+        res.redirect("/admin/showProducts");
       })
       .catch((err) => {
         console.log(err);
@@ -408,7 +409,7 @@ module.exports = {
   addCoupon: async (req, res) => {
     const coupon = req.body;
     await new couponSchema(coupon).save().then(() => {
-      res.redirect("/adminLogin/coupon");
+      res.redirect("/admin/coupon");
     });
   },
   orders: async (req, res) => {
@@ -508,13 +509,18 @@ module.exports = {
     })
       .save()
       .then(() => {
-        res.redirect("/adminLogin/banner");
+        res.redirect("/admin/banner");
       });
   },
 
   showBanner: async (req, res) => {
     let banner = await bannerModel.find();
     res.render("admin/showBanner", { banner });
+  },
+
+  showCoupon:async (req, res) => {
+    let coupon = await couponSchema.find();
+    res.render("admin/showCoupon", { coupon });
   },
 
   editBanner: async (req, res) => {
@@ -539,14 +545,48 @@ module.exports = {
       }
     );
     banner.save().then(() => {
-      res.redirect("/adminLogin/showBanner");
+      res.redirect("/admin/showBanner");
     });
   },
 
   deleteBanner: async (req, res) => {
     const id = req.params.id;
     await bannerModel.findByIdAndDelete({ _id: id }).then(() => {
-      res.redirect("/adminLogin/showBanner");
+      res.redirect("/admin/showBanner");
     });
+  },
+
+  deleteCoupon: async (req, res) => {
+    const id = req.params.id;
+    await couponSchema.findByIdAndDelete({ _id: id }).then(() => {
+      res.redirect("/admin/showCoupon");
+    });
+  },
+
+  updateCoupon: async (req, res) => {
+    const id = req.params.id;
+    const { name , code , discount } = req.body;
+  
+    const coupon = await couponSchema.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name,
+          code,
+          discount
+
+          
+        },
+      }
+    );
+    coupon.save().then(() => {
+      res.redirect("/admin/showCoupon");
+    });
+  },
+
+  editCoupon: async (req, res) => {
+    let couponId = req.params.id;
+    let coupon = await couponSchema.findById({ _id: couponId });
+    res.render("admin/editCoupon", { coupon });
   },
 };

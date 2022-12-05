@@ -14,7 +14,6 @@ const MongoDBSession = require("connect-mongodb-session")(session);
 
 const userRoute = require("./routes/user/userRouter");
 const adminRoute = require("./routes/admin/adminRoute");
-const guestHome = require("./routes/user/guestRouter");
 
 const nodemailer = require("nodemailer");
 
@@ -73,11 +72,9 @@ app.use(
   }).single("image")
 );
 
-app.use("/", guestHome);
 
-app.use("/login", userRoute);
-
-app.use("/adminLogin", adminRoute);
+app.use("/", userRoute);
+app.use("/admin", adminRoute);
 
 app.listen(9000, () => {
   console.log("Server running on port 9000");

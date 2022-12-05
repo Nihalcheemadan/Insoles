@@ -3,7 +3,7 @@
 
 	<% if(list.length==0){ %>
 		<div class="text-center">
-		  <a href="/login/userHome"><img src="/public/images/emptywishlist.webp" alt="empty-cart" style=" height:100vh;"></a>
+		  <a href="/"><img src="/public/images/emptywishlist.webp" alt="empty-cart" style=" height:100vh;"></a>
 		</div>
 		<% }else{ %>
 
@@ -38,7 +38,7 @@
 						    <tbody>
 								
 								<tr class="text-center">
-									<td class="product-remove"><a href="/login/removeWishlistProduct/<%= x._id %>"><span class="ion-ios-close"></span></a></td>
+									<td class="product-remove"><a href="/removeWishlistProduct/<%= x._id %>"><span class="ion-ios-close"></span></a></td>
 									
 						        <td class="image-prod"><div class="img" style="background-image:url(/<%=x.image%>);"></div></td>
 						        
@@ -54,7 +54,7 @@
 						        <td class="quantity">
 									<div class="col col-lg-12 col-md-12 mt-5 cart-wrap ftco-animate">
     				
-										<p class="text-center"><a href="/login/moveToCart/<%= x._id %>" class="btn btn-primary py-3 px-4">Add to Cart</a></p>
+										<p class="text-center"><a href="/moveToCart/<%= x._id %>" class="btn btn-primary py-3 px-4">Add to Cart</a></p>
 									</div>
 						        	
 							</td>
@@ -73,7 +73,7 @@
     		<div class="row justify-content-start">
     			<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
     				
-    				<p class="text-center"><a href="/login/cart" class="btn btn-primary py-3 px-4">Proceed to Cart</a></p>
+    				<p class="text-center"><a href="/cart" class="btn btn-primary py-3 px-4">Proceed to Cart</a></p>
     			</div>
     		</div>
 			</div>

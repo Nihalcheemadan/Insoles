@@ -27,8 +27,9 @@ module.exports = {
   },
 
   // add to cart
-
+  
   addToCart: async (req, res) => {
+    
     let user = req.session.user;
     let userId = user._id;
     let productId = req.params.id;
@@ -73,7 +74,7 @@ module.exports = {
       });
       newCart.save();
     }
-    res.redirect("/login/cart");
+    res.redirect("/cart");
     //
   },
 
@@ -99,7 +100,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/login/cart");
+        res.redirect("/cart");
       });
   },
 

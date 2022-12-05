@@ -62,7 +62,7 @@ module.exports = {
     await wishlistSchema
       .findOneAndUpdate({ userId }, { $pull: { productIds: id } })
       .then(() => {
-        res.redirect("/login/wishlist");
+        res.redirect("/wishlist");
       });
   },
 
@@ -121,6 +121,6 @@ module.exports = {
         await wishlistSchema.findOneAndUpdate({userId:userId} , {$pull:{productIds:productId}})
       })
     }
-    res.redirect("/login/userHome");
+    res.redirect("/");
   }
 };

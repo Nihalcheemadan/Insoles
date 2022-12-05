@@ -34,7 +34,7 @@ module.exports = {
   
         res.render("user/checkout", { discount ,cartId , cartTotal, cartItems, address, index });
       } else {
-        res.redirect("/login/cart");
+        res.redirect("/cart");
       }
     }catch{
       res.render('error')
@@ -140,7 +140,7 @@ module.exports = {
           }
         )
         .then(() => {
-          res.redirect("/login/checkout");
+          res.redirect("/checkout");
         });
     } else {
       const address = new addressSchema({
@@ -150,7 +150,7 @@ module.exports = {
       await address
         .save()
         .then(() => {
-          res.redirect("/login/checkout");
+          res.redirect("/checkout");
         })
         .catch((err) => {
           console.log(err.message);

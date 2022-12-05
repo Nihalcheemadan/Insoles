@@ -23,10 +23,81 @@
     <link rel="stylesheet" href="/public/stylesheet/css/shopPage/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="/public/stylesheet/css/shopPage/style.css" type="text/css">
 
+    <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+    
+        <link
+          href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800"
+          rel="stylesheet"
+        />
+    
+        <link
+          rel="stylesheet"
+          href="../public/stylesheet/open-iconic-bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="../public/stylesheet/animate.css" />
+    
+        <link
+          rel="stylesheet"
+          href="../public/stylesheet/owl.carousel.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="../public/stylesheet/owl.theme.default.min.css"
+        />
+        <link rel="stylesheet" href="../public/stylesheet/magnific-popup.css" />
+    
+        <link rel="stylesheet" href="../public/stylesheet/aos.css" />
+    
+        <link rel="stylesheet" href="../public/stylesheet/ionicons.min.css" />
+    
+        <link
+          rel="stylesheet"
+          href="../public/stylesheet/bootstrap-datepicker.css"
+        />
+        <link
+          rel="stylesheet"
+          href="../public/stylesheet/jquery.timepicker.css"
+        />
+    
+        <link rel="stylesheet" href="../public/stylesheet/flaticon.css" />
+        <link rel="stylesheet" href="../public/stylesheet/icomoon.css" />
+        <link rel="stylesheet" href="../public/stylesheet/style.css" />
+    
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="/public/stylesheet/css/util.css"
+        />
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="/public/stylesheet/css/main.css"
+        />
+    
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+        />
+
+        <!-- sweetalert -->
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- fontawesome -->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <!-- ajax -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
      <!-- ajax -->
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+
+
 
 
        
@@ -34,125 +105,98 @@
 
 <body>
     <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
+   
 
     <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
-    <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__option">
-            <div class="offcanvas__links">
-                <a href="#">Sign in</a>
-                <a href="#">FAQs</a>
-            </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
-        </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="/public/stylesheet/css/shopPage/icon/search.png" alt=""></a>
-            <a href="#"><img src="/public/stylesheet/css/shopPage/icon/heart.png" alt=""></a>
-            <a href="#"><img src="/public/stylesheet/css/shopPage/icon/cart.png" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
-        <div id="mobile-menu-wrap"></div>
-        <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
-        </div>
-    </div>
+    
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
-        <div class="header__top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-7">
-                        <div class="header__top__left">
-                            <p>Free shipping, 30-day return or refund guarantee.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-5">
-                        <div class="header__top__right">
-                            <div class="header__top__links">
-                                <a href="#">Sign in</a>
-                                <a href="#">FAQs</a>
-                            </div>
-                            <div class="header__top__hover">
-                                <span>Usd <i class="arrow_carrot-down"></i></span>
-                                <ul>
-                                    <li>USD</li>
-                                    <li>EUR</li>
-                                    <li>USD</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    
+        
+        
+                    <nav
+      class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+      id="ftco-navbar"
+    >
+      <div class="container">
+        <a class="navbar-brand" href="/">Insoles</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#ftco-nav"
+          aria-controls="ftco-nav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a href="/" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="dropdown04"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Catalog</a
+              >
+              <div class="dropdown-menu" aria-labelledby="dropdown04">
+                <a class="dropdown-item" href="/shop">Shop</a>
+                <a class="dropdown-item" href="product-single.html"
+                  >Single Product</a
+                >
+                <a class="dropdown-item" href="cart.html">Cart</a>
+                <a class="dropdown-item" href="checkout.html">Checkout</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="about.html" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="dropdown04"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >Account</a
+              >
+              <div class="dropdown-menu" aria-labelledby="dropdown04">
+                <a class="dropdown-item" href="/profile">PROFILE</a>
+                <a class="dropdown-item" href="/logout">LOGOUT</a>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a href="/wishlist" class="nav-link">Wishlist</a>
+            </li>
+            <li class="nav-item cta cta-colored">
+              <a href="/cart" class="nav-link"
+                ><span class="icon-shopping_cart"></span>[0]</a
+              >
+            </li>
+          </ul>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li><a href="./index.html">Home</a></li>
-                            <li class="active"><a href="./shop.html">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="/public/stylesheet/css/shopPage/icon/search.png" alt=""></a>
-                        <a href="#"><img src="/public/stylesheet/css/shopPage/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="/public/stylesheet/css/shopPage/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
-                    </div>
-                </div>
-            </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
-        </div>
-    </header>
+      </div>
+    </nav>
+               
     <!-- Header Section End -->
 
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shop</h4>
-                        <div class="breadcrumb__links">
-                            <a href="./index.html">Home</a>
-                            <span>Shop</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
     <!-- Breadcrumb Section End -->
 
     <!-- Shop Section Begin -->
@@ -344,6 +388,7 @@
                     </div>
                     <div class="row">
                         <% product.forEach(function(x) { %> 
+                            <% if(x.status == "listed") { %>
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg="/<%= x.image  %> ">
@@ -356,13 +401,14 @@
                                 </div>
                                 <div class="product__item__text">
                                     <h6><%= x.name  %> </h6>
-                                    <a href="#" class="add-cart">+ Add To Cart</a>
+                                    <a href="/moveToCart/<%= x._id %>" class="add-cart">+ Add To Cart</a>
                                    
                                     <h5><%= x.price %> </h5>
                                     
                                 </div>
                             </div>
                         </div>
+                        <% } %> 
                         <% }) %> 
                         
                         
@@ -387,31 +433,31 @@
     <script>
         function itemAdded(id){
 
-$.ajax({
-url: "/login/addToWishlist",
-data: {
-id
-},
-method: "post",
-success: (response) => {
-if (response.success) {
+            $.ajax({
+                url: "/addToWishlist",
+                data: {
+                id
+            },
+            method: "post",
+            success: (response) => {
+            if (response.success) {
   
-  Swal.fire({
-    icon: "success",
-    title: "Success",
-    text: "item added to wishlist",
-  });
+                Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "item added to wishlist",
+            });
   
-} else {
-    Swal.fire({
-    icon: "error",
-    title: "error",
-    text: "item already exist ",
-  });
+            } else {
+                Swal.fire({
+                icon: "error",
+                title: "error",
+                text: "item already exist ",
+            });
   
-}
-}})
-}
+        }
+    }})
+    }
     </script>
 
     <!-- Footer Section Begin -->

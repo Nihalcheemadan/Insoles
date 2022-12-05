@@ -39,18 +39,28 @@ module.exports = {
     if (req.session.userLogin && user.status === "unblocked") {
       next();
     } else {
-      res.redirect("/login");
+      res.redirect("/login"); 
     }
   },
 
+  // home:(req,res)=>{
+  //   res.render("user/home")
+  // },
+
   //user home page
 
-  home: async (req, res) => {
-    
-    const products = await addProduct.find();
-    const banner = await bannerModel.find()
-    console.log(banner);
-    res.render("user/userHome", { products , banner });
+  userHome: async (req, res) => {
+    if(req.session.userLogin){
+
+      const products = await addProduct.find();
+      const banner = await bannerModel.find()
+      console.log(banner);
+      res.render("user/userHome", { products , banner });
+    }else{
+      const products = await addProduct.find();
+      const banner = await bannerModel.find()
+      res.render('user/home' , { products , banner })
+    }
   },
 
   // DO_SIGNUP
@@ -160,7 +170,7 @@ module.exports = {
     }
     req.session.userLogin = true;
     req.session.user = user;
-    res.redirect("/login/userHome");
+    res.redirect("/");
   },
 
   // single product details page
@@ -243,7 +253,7 @@ module.exports = {
         { $pull: { address: { _id: addressId } } }
       )
       .then(() => {
-        res.redirect("/login/manageAddress");
+        res.redirect("/manageAddress");
       });
   },
 
@@ -263,7 +273,7 @@ module.exports = {
           }
         )
         .then(() => {
-          res.redirect("/login/manageAddress");
+          res.redirect("/manageAddress");
         });
     } else {
       const address = new addressSchema({
@@ -273,7 +283,7 @@ module.exports = {
       await address
         .save()
         .then(() => {
-          res.redirect("/login/manageAddress");
+          res.redirect("/manageAddress");
         })
         .catch((err) => {
           console.log(err.message);

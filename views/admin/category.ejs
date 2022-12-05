@@ -11,15 +11,15 @@
                 <span class="text-muted fw-light">Categories</span>
               </h4>
 
-              <!-- <form action="/adminLogin/addMainCategory" >  -->
-             <a href="/adminLogin/addMainCategory">  <button type="submit" class="btn btn-success " style="margin-left: 1040px;">Add Category</button></a> 
+              <!-- <form action="/admin/addMainCategory" >  -->
+             <a href="/admin/addMainCategory">  <button type="submit" class="btn btn-success " style="margin-left: 1040px;">Add Category</button></a> 
               <!-- </form> -->
 
             <div class="row">
               
                 <% subCategory.forEach(function(y) { %>
                   <div class="col-md-6 col-xl-4 mt-3">
-                  <a href="/adminLogin/editCategory/<%= y._id %>">
+                  <a href="/admin/editCategory/<%= y._id %>">
                   <div class="card bg-dark border-0 text-white">
                    
 
@@ -36,7 +36,7 @@
               <% }) %>
               
               <div class="col-md-6 col-xl-4 mt-3">
-                <a href="/adminLogin/categoryForm">
+                <a href="/admin/categoryForm">
                 <div class="card bg-dark border-0 text-white">
                   <img class="card-img" style="height: 250px;width: 100%;" src="/public/admin/img/elements/11.jpg"  />
                   <div class="card-img-overlay  text-center ">

@@ -6,9 +6,10 @@ const wishlistController = require("../../controllers/user/wishlistController");
 const orderController = require('../../controllers/user/orderController')
 
 
-router.get("/userHome", controller.userSession, controller.home);
+router.get("/", controller.userHome);
+// router.get('/home' , controller.home)
 
-router.get("/", controller.login);
+router.get("/login", controller.login);
 router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 router.get("/productdetail/:id", controller.showProductdetails);

@@ -55,7 +55,7 @@ module.exports = {
     console.log(total);
     let products = cart.products;
     let discount = cart.offer.discount
-    console.log("discountnuidauisdhiusa"+discount);
+    
 
 
     const newOrder = new orderSchema({
@@ -72,7 +72,7 @@ module.exports = {
     });
     let orderId = newOrder._id;
     total = newOrder.total;
-    console.log("jksudduasf"+total);
+    
 
     if (paymentMethod == "COD") {
       await cartModel.findByIdAndDelete({ _id: cart._id });
@@ -112,10 +112,10 @@ module.exports = {
     hmac = hmac.digest("hex");
     if (hmac === details.payment.razorpay_signature) {
       let orderId = details.order.receipt;
-      await orderSchema.findOneAndUpdate(
-        { _id: orderId },
-        { $set: { "products.$.paymentStatus": "paid" } }
-      );
+      // await orderSchema.updateOne(
+      //   { _id: orderId , "products.productId": productId  },
+      //   { $set: { "products.$.paymentStatus": "Paid" } }
+      // );
       await cartModel.findByIdAndDelete({ _id: cart._id });
       res.json({ status: true });
     } else {

@@ -108,8 +108,8 @@
 	    						<p class="price"><span>Rs.<%= x.price %></span></p>
 	    					</div>
 	    					<p class="bottom-area d-flex px-3">
-    							<a href="/login/productdetail/<%= x._id %>" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>	
-    							<a href="/login/addToWishlist/<%= x._id %>" class="buy-now text-center py-2">Add to wishlist<span><i class="ion-ios-cart ml-1"></i></span></a>
+    							<a  href="/login/moveToCart/<%= x._id %>" class="add-to-cart text-center py-2 mr-1"><span> <i class="ion-ios-cart ml-1"></i></span></a>	
+    							<a onclick="itemAdded('<%= x._id %>')"  class="buy-now text-center py-2"><span><i class="ion-ios-heart ml-1"></i></span></a>
     						</p>
     					</div>
     				</div>
@@ -393,9 +393,39 @@
     	</div>
     </section>
 
-	<script type="text/javascript">
+	<script>
+		function itemAdded(id){
+
+			$.ajax({
+          url: "/login/addToWishlist",
+          data: {
+            id
+          },
+          method: "post",
+          success: (response) => {
+            if (response.success) {
+              
+              Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "item added to wishlist",
+              });
+			  
+            } else {
+				Swal.fire({
+                icon: "error",
+                title: "error",
+                text: "item already exist ",
+              });
+			  
+			}
+		}})
+		}
+	</script>
+
+	<!-- <script type="text/javascript">
         function preventBack() { window.history.forward(); }
         setTimeout("preventBack()", 0); window.onunload = function () { null };
-    </script>
+    </script> -->
 
     <%- include('../userFooter.ejs') -%>

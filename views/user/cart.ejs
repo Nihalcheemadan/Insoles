@@ -29,7 +29,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 ftco-animate">
-            <div class="cart-list">
+            <div class="cart-list" id="cart">
               <table class="table">
                 <thead class="thead-primary">
                   <tr class="text-center">
@@ -42,10 +42,10 @@
                   </tr>
                 </thead>
                 <% products.forEach(function(x){ %>
-                <tbody>
+                <tbody id="cartItem">
                   <tr class="text-center">
                     <td class="product-remove">
-                      <a href="/login/removeProduct/<%= x.productId._id %>/<%= x.total %>"
+                      <a  href="/login/removeProduct/<%= x.productId._id %>/<%= x.total %>"
                         ><span class="ion-ios-close"></span
                       ></a>
                     </td>
@@ -63,22 +63,20 @@
                     </td>
 
                     <td class="price"><%= x.productId.price %></td>
-
+                    <!-- href="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  "   href="/login/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> "  -->
                     <td class="quantity">
                       <div class="input-group mb-3">
-                        <a href="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  ">
+                        <a onclick="QtyDecrement('<%= x.productId._id %>','<%= x.productId.price %>')" >
                           <button id="button" style="width: 40px">-</button>
                         </a>
-                        <!-- <form action="/login/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>" method="POST">
-                          <button id="button" style="width: 40px">-</button>
-                        </form> -->
+                        
                         <input
                           type="text"
                           name="quantity"
                           class="quantity form-control input-number"
                           value="<%= x.quantity %>"
                         />
-                        <a href="/login/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> ">
+                        <a onclick="QtyIncrement('<%= x.productId._id %>','<%= x.productId.price %> ')" >
                           <button id="plusbutton" style="width: 40px">+</button>
                         </a>
                       </div>
@@ -305,58 +303,38 @@
     <script src="../../public/js/main.js"></script>
 
     <script>
-      //   $(document).ready(function () {
-      //     var quantitiy = 0;
-      //     $(".quantity-right-plus").click(function (e) {
-      //       // Stop acting like a button
-      //       e.preventDefault();
-      //       // Get the field name
-      //       var quantity = parseInt($("#quantity").val());
+      
 
-      //       // If is not undefined
-
-      //       $("#quantity").val(quantity + 1);
-
-      //       // Increment
-      //     });
-
-      //     $(".quantity-left-minus").click(function (e) {
-      //       // Stop acting like a button
-      //       e.preventDefault();
-      //       // Get the field name
-      //       var quantity = parseInt($("#quantity").val());
-
-      //       // If is not undefined
-
-      //       // Increment
-      //       if (quantity > 0) {
-      //         $("#quantity").val(quantity - 1);
-      //       }
-      //     });
-      //   }),
-
-      function QtyIncrement(cartId, productId, price, count) {
-        // productId = productId;
+      function QtyIncrement(productId, price) {
         console.log(productId);
-        const quantity = parseInt(document.getElementById(productId).innerHTML);
-        count = parseInt(count);
-        console.log(quantity);
         $.ajax({
-          url: "/changeQty",
+          url: "/login/QtyIncrement",
           data: {
-            cart: cartId,
-            product: productId,
-            quantity: quantity,
-            count: count,
+            productId,
+            price
           },
-
-          method: "POST",
+          method: "post",
           success: (response) => {
             console.log("cart updated");
+            window.location.reload()
           },
         });
+      }
 
-        $("#cartdiv").load(location.href + " #cartdiv");
+      function QtyDecrement(productId, price) {
+        console.log(productId);
+        $.ajax({
+          url: "/login/QtyDecrement",
+          data: {
+            productId,
+            price
+          },
+          method: "post",
+          success: (response) => {
+            console.log("cart updated");
+            window.location.reload()
+          },
+        });
       }
     </script>
   </body>

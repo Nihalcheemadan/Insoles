@@ -77,17 +77,32 @@
                         <div class="d-flex justify-content-center" style="width: 20%; ">
                             <li style="margin-left: 25px;"><%= moment(order.date).format("LL")  %></li>
                         </div>
-                        
+                        <% if( x.orderStatus == "Delivered"  ) %>
                         <div class="d-flex justify-content-center" style="width: 15%;">
                             <li style="margin-right: 35px;"> <a href="/login/productdetail/<%= x.productId._id %>" class="">
                                     <i class="fa fa-eye" aria-hidden="false"></i></a></li>
                         </div>
                 </div>
+                <% if( x.orderStatus == "Cancelled") { %>
+                <div class="d-flex justify-content-center" style="width: 15%;">
+                    <li style="margin-right: 35px;"> <button > <i style="color: rgb(51, 218, 29);"
+                        class=" fa fa-check" aria-hidden="true"></i>
+
+                    </button></li>
+                </div>
+                <% } else if( x.orderStatus == "Delivered") { %> 
+                    <div class="d-flex justify-content-center" style="width: 15%;">
+                        <li style="margin-right: 35px;"> <button onclick="orderCancelled()" class=""> <i style="color: red;"
+                            class=" fa fa-ban" aria-hidden="true"></i>
+                        </button></li>
+                    </div>
+                <% } else { %> 
                 <div class="d-flex justify-content-center" style="width: 15%;">
                     <li style="margin-right: 35px;"> <button onclick="cancelorder('<%= order._id %>','<%= x.productId._id %>')" class=""> <i style="color: red;"
                         class=" fa fa-ban" aria-hidden="true"></i>
                     </button></li>
                 </div>
+                <% } %> 
                 
 
 
@@ -131,7 +146,7 @@
     
     function cancelorder(id , productId ) {
         if(confirm('Do you want to cancel the order')){
-            var div=$('#card').html();
+            
             $.ajax({
           url: "/login/cancelOrder",
           data: {
@@ -153,11 +168,19 @@
         });
         } else {
               Swal.fire({
-                icon: "success",
+                icon: "error",
                 title: "cancelled",
-                text: "cancelled",
+                text: "",
               });
         }
+    }
+
+    function orderCancelled(){
+        Swal.fire({
+                icon: "error",
+                title: "Order delivered ",
+                text: "",
+              });
     }
 </script>
 

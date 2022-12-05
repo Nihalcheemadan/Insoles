@@ -1,3 +1,4 @@
+const { response } = require("express");
 const addProduct = require("../../models/admin/addProduct");
 const couponSchema = require("../../models/admin/couponSchema");
 const cartModel = require("../../models/user/cartModel");
@@ -107,9 +108,10 @@ module.exports = {
   QtyIncrement: async (req, res) => {
     let userId = req.session.user._id;
 
-    let productId = req.params.id;
-    let price = parseInt(req.params.price);
-
+    let productId = req.body.productId;
+    console.log(productId);
+    // let price = parseInt(req.body.price);
+    let price = req.body.price
     let product = await addProduct.findById(productId);
 
     let cart = await cartModel
@@ -124,7 +126,8 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/login/cart");
+        // res.redirect("/login/cart");
+        res.json(response)
       });
   },
 
@@ -133,8 +136,8 @@ module.exports = {
   QtyDecrement: async (req, res) => {
     let userId = req.session.user._id;
 
-    let productId = req.params.id;
-    let price = parseInt(req.params.price);
+    let productId = req.body.productId;
+    let price = req.body.price
 
     let product = await addProduct.findById(productId);
 
@@ -150,7 +153,7 @@ module.exports = {
         }
       )
       .then(() => {
-        res.redirect("/login/cart");
+        res.json(response);
     });
   },
 

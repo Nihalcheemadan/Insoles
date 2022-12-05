@@ -28,9 +28,9 @@ module.exports = {
 
   // ADD TO WISHLIST
   addToWishlist: async (req, res, next) => {
-    let productId = req.params.id;
-    let user = req.session.user;
-    let user_id = user._id;
+    let productId = req.body.id;
+    let user_id = req.session.user._id;
+    
 
     let wishlist = await wishlistSchema.findOne({ userId: user_id });
     if (wishlist) {
@@ -38,16 +38,20 @@ module.exports = {
         { userId: user_id },
         { $addToSet: { productIds: productId } }
       );
-      res.redirect("/login/wishlist");
+      res.json({success:true})
+      
     } else {
       const wish = new wishlistSchema({
         userId: user_id,
         productIds: [productId],
       });
       wish.save().then(() => {
-        res.redirect("/login/wishlist");
+        console.log(wish);
       });
+      res.json({success:true})
     }
+    
+    
   },
   //remove wishlist product
 
@@ -117,6 +121,6 @@ module.exports = {
         await wishlistSchema.findOneAndUpdate({userId:userId} , {$pull:{productIds:productId}})
       })
     }
-    res.redirect("/login/cart");
+    res.redirect("/login/userHome");
   }
 };

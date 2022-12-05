@@ -46,6 +46,7 @@ module.exports = {
   //user home page
 
   home: async (req, res) => {
+    
     const products = await addProduct.find();
     const banner = await bannerModel.find()
     console.log(banner);
@@ -168,6 +169,12 @@ module.exports = {
     const id = req.params.id;
     const singleProduct = await addProduct.findById({ _id: id });
     res.render("user/productdetail", { singleProduct });
+  },
+
+  shop:async (req,res)=>{
+    let product = await addProduct.find({})
+    console.log(product);
+    res.render("user/shop", {product})
   },
 
   // logout

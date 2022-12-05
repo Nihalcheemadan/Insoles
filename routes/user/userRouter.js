@@ -12,6 +12,7 @@ router.get("/", controller.login);
 router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 router.get("/productdetail/:id", controller.showProductdetails);
+router.get("/shop",controller.shop)
 
 //user profile and address management
 
@@ -28,7 +29,7 @@ router.get(
 //wishlist routes
 
 router.get("/wishlist", controller.userSession, wishlistController.wishlist);
-router.get("/addToWishlist/:id",controller.userSession,wishlistController.addToWishlist);
+router.post("/addToWishlist",controller.userSession,wishlistController.addToWishlist);
 router.get("/removeWishlistProduct/:id",wishlistController.removeWishlistProduct);
 router.get('/moveToCart/:id', controller.userSession , wishlistController.moveToCart)
 
@@ -37,8 +38,8 @@ router.get('/moveToCart/:id', controller.userSession , wishlistController.moveTo
 router.get("/cart", controller.userSession, cartController.cart);
 router.post("/addToCart/:id", controller.userSession, cartController.addToCart);
 router.get("/removeProduct/:id/:total",controller.userSession,cartController.removeCartProduct);
-router.get("/QtyIncrement/:id/:price",controller.userSession,cartController.QtyIncrement);
-router.get("/QtyDecrement/:id/:price",controller.userSession,cartController.QtyDecrement);
+router.post("/QtyIncrement",controller.userSession,cartController.QtyIncrement);
+router.post("/QtyDecrement",controller.userSession,cartController.QtyDecrement);
 
 
 //OTP PAGE

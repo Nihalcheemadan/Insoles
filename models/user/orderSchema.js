@@ -15,7 +15,7 @@ const orderModel = new mongoose.Schema({
       paymentStatus: {
         type: String,
         default: "Pending",
-        enum: ["Pending" , "Paid" ,"Unpaid"]
+        
       },
       orderStatus: {
         type: String,

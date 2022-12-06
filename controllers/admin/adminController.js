@@ -13,18 +13,25 @@ const bannerModel = require("../../models/admin/bannerModel");
 const moment = require("moment");
 const orderSchema = require("../../models/user/orderSchema");
 
-
 module.exports = {
+
   // admin Login
 
   adminLogin: (req, res) => {
     res.render("admin/login");
   },
 
-  // admin home
-
-  adminHome: (req, res) => {
-    res.render("admin/home");
+  logout: (req, res, next) => {
+    if (req.session) {
+      // delete session object
+      req.session.destroy((err) => {
+        if (err) {
+          return next(err);
+        } else {
+          return res.redirect("/admin");
+        }
+      });
+    }
   },
 
   //admin signin
@@ -57,6 +64,22 @@ module.exports = {
     }
   },
 
+  //admin session
+
+  adminSession: async (req, res, next) => {
+    if (req.session.adminLogin ) {
+      next();
+    } else {
+      res.redirect("/admin"); 
+    }
+  },
+
+  // admin home
+
+  adminHome: (req, res) => {
+    res.render("admin/home");
+  },
+
   //add product page
 
   addProduct: async (req, res, next) => {
@@ -66,11 +89,32 @@ module.exports = {
     res.render("admin/addProduct", { category, subCategory });
   },
 
-  //show user section
+  // adding new product
 
-  showUser: async (req, res, next) => {
-    let users = await userSchema.find();
-    res.render("admin/showUser", { users, index: 1 });
+  newProduct: async (req, res, next) => {
+    const { category, subCategory, name, brand, description, price } = req.body;
+    const image = req.file;
+
+    console.log(image);
+    const newProduct = addProduct({
+      category,
+      subCategory,
+      name,
+      brand,
+      description,
+      price,
+      image: image.path,
+    });
+    await newProduct
+      .save()
+      .then(() => {
+        console.log(newProduct);
+        res.redirect("/admin/addProduct");
+      })
+      .catch((err) => {
+        console.log(err.message);
+        console.log(err);
+      });
   },
 
   //show product section
@@ -97,55 +141,95 @@ module.exports = {
     // let products = await addProduct.find();
   },
 
-  //show categroy section
+  //list product
 
-  category: async (req, res) => {
-    let subCategory = await subCategorySchema.find({}).populate("category_id");
-
-    res.render("admin/category", { subCategory });
+  listProduct: async (req, res) => {
+    let id = req.params.id;
+    await addProduct
+      .findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            status: "listed",
+          },
+        }
+      )
+      .then(() => {
+        res.redirect("/admin/showProducts");
+      });
   },
 
-  //categroy form
+  //unlist product
 
-  categoryForm: async (req, res) => {
+  unListProduct: async (req, res) => {
+    let id = req.params.id;
+    await addProduct
+      .findByIdAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            status: "unlisted",
+          },
+        }
+      )
+      .then(() => {
+        res.redirect("/admin/showProducts");
+      });
+  },
+
+  //edit product page
+
+  editProductForm: async (req, res) => {
+    const id = req.params.id;
+
+    const singleProduct = await addProduct.findOne({ _id: id });
     let category = await categorySchema.find();
-    res.render("admin/categoryForm", { category });
+    let subCategory = await subCategorySchema.find();
+    res.render("admin/editProductForm", {
+      singleProduct,
+      category,
+      subCategory,
+    });
   },
 
-  //update category
+  // update product
 
-  updateCategory: async (req, res) => {
+  editProduct: async (req, res) => {
     const id = req.params.id;
     const image = req.file;
-    const { category, subCategory } = req.body;
 
-    await subCategorySchema
+    const { category, subCategory, name, brand, description, price } = req.body;
+
+    await addProduct
       .updateOne(
         { _id: id },
         {
           $set: {
-            category_id: category,
-            subCategory: subCategory,
-            imageUrl: image.path,
+            category,
+            subCategory,
+            name,
+            brand,
+            description,
+            price,
+            image: image.path,
           },
         }
       )
 
       .then(() => {
-        res.redirect("/admin/category");
+        res.redirect("/admin/showProducts");
       })
       .catch((err) => {
         console.log(err);
       });
   },
 
-  //delete category
+  //show categroy section
 
-  deleteCategory: async (req, res, next) => {
-    let id = req.params.id;
-    await subCategorySchema.findByIdAndRemove({ _id: id }).then(() => {
-      res.redirect("/admin/category");
-    });
+  category: async (req, res) => {
+    let subCategory = await subCategorySchema.find({}).populate("category_id");
+
+    res.render("admin/category", { subCategory });
   },
 
   //adding new category
@@ -256,33 +340,54 @@ module.exports = {
     res.render("admin/editCategory", { singleCategory, category });
   },
 
-  // adding new product
+  //categroy form
 
-  newProduct: async (req, res, next) => {
-    
-    const { category, subCategory, name, brand, description, price } = req.body;
+  categoryForm: async (req, res) => {
+    let category = await categorySchema.find();
+    res.render("admin/categoryForm", { category });
+  },
+
+  //update category
+
+  updateCategory: async (req, res) => {
+    const id = req.params.id;
     const image = req.file;
+    const { category, subCategory } = req.body;
 
-    console.log(image);
-    const newProduct = addProduct({
-      category,
-      subCategory,
-      name,
-      brand,
-      description,
-      price,
-      image: image.path,
-    });
-    await newProduct
-      .save()
+    await subCategorySchema
+      .updateOne(
+        { _id: id },
+        {
+          $set: {
+            category_id: category,
+            subCategory: subCategory,
+            imageUrl: image.path,
+          },
+        }
+      )
+
       .then(() => {
-        console.log(newProduct);
-        res.redirect("/admin/addProduct");
+        res.redirect("/admin/category");
       })
       .catch((err) => {
-        console.log(err.message);
         console.log(err);
       });
+  },
+
+  //delete category
+
+  deleteCategory: async (req, res, next) => {
+    let id = req.params.id;
+    await subCategorySchema.findByIdAndRemove({ _id: id }).then(() => {
+      res.redirect("/admin/category");
+    });
+  },
+
+  //show user section
+
+  showUser: async (req, res, next) => {
+    let users = await userSchema.find();
+    res.render("admin/showUser", { users, index: 1 });
   },
 
   // block a user
@@ -321,97 +426,68 @@ module.exports = {
       });
   },
 
-  //list product
+  //coupon management
 
-  listProduct: async (req, res) => {
-    let id = req.params.id;
-    await addProduct
-      .findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            status: "listed",
-          },
-        }
-      )
-      .then(() => {
-        res.redirect("/admin/showProducts");
-      });
-  },
-
-  //unlist product
-
-  unListProduct: async (req, res) => {
-    let id = req.params.id;
-    await addProduct
-      .findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            status: "unlisted",
-          },
-        }
-      )
-      .then(() => {
-        res.redirect("/admin/showProducts");
-      });
-  },
-
-  //edit product page
-
-  editProductForm: async (req, res) => {
-    const id = req.params.id;
-
-    const singleProduct = await addProduct.findOne({ _id: id });
-    let category = await categorySchema.find();
-    let subCategory = await subCategorySchema.find();
-    res.render("admin/editProductForm", {
-      singleProduct,
-      category,
-      subCategory,
-    });
-  },
-
-  // update product
-
-  editProduct: async (req, res) => {
-    const id = req.params.id;
-    const image = req.file;
-
-    const { category, subCategory, name, brand, description, price } = req.body;
-
-    await addProduct
-      .updateOne(
-        { _id: id },
-        {
-          $set: {
-            category,
-            subCategory,
-            name,
-            brand,
-            description,
-            price,
-            image: image.path,
-          },
-        }
-      )
-
-      .then(() => {
-        res.redirect("/admin/showProducts");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },
   coupon: (req, res) => {
     res.render("admin/couponManagement");
   },
+
+  //show coupons page
+
+  showCoupon: async (req, res) => {
+    let coupon = await couponSchema.find();
+    res.render("admin/showCoupon", { coupon });
+  },
+
+  // add new coupon
+
   addCoupon: async (req, res) => {
     const coupon = req.body;
     await new couponSchema(coupon).save().then(() => {
       res.redirect("/admin/coupon");
     });
   },
+
+  //delete coupon
+
+  deleteCoupon: async (req, res) => {
+    const id = req.params.id;
+    await couponSchema.findByIdAndDelete({ _id: id }).then(() => {
+      res.redirect("/admin/showCoupon");
+    });
+  },
+
+  //update coupon
+
+  updateCoupon: async (req, res) => {
+    const id = req.params.id;
+    const { name, code, discount } = req.body;
+
+    const coupon = await couponSchema.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name,
+          code,
+          discount,
+        },
+      }
+    );
+    coupon.save().then(() => {
+      res.redirect("/admin/showCoupon");
+    });
+  },
+
+  //edit coupon
+
+  editCoupon: async (req, res) => {
+    let couponId = req.params.id;
+    let coupon = await couponSchema.findById({ _id: couponId });
+    res.render("admin/editCoupon", { coupon });
+  },
+
+  //orders page
+
   orders: async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 8;
@@ -435,27 +511,25 @@ module.exports = {
     });
   },
 
-  // invoicePage:(req,res)=>{
-    
-  
-  //   res.render('admin/invoice')
-  // },
+  //invoice
 
-  invoice:async(req,res)=>{
-
-    
-    let orderId =  req.params.id
+  invoice: async (req, res) => {
+    let orderId = req.params.id;
     console.log(orderId);
 
-    let order = await orderSchema.findOne({_id:orderId}).populate('products.productId').populate('userId').populate('address')
-  
-    
-    const products = order.products
-    const address = order.address;
-    res.render('admin/invoice',{order, address, products , moment})
-    // res.render('admin/invoice2',{order, address, products , moment})
+    let order = await orderSchema
+      .findOne({ _id: orderId })
+      .populate("products.productId")
+      .populate("userId")
+      .populate("address");
 
+    const products = order.products;
+    const address = order.address;
+    res.render("admin/invoice", { order, address, products, moment });
+   
   },
+
+  //change order status in order management
 
   changeStatus: async (req, res) => {
     const { status, orderId, productId } = req.body;
@@ -495,9 +569,14 @@ module.exports = {
     res.json({ success: "success" });
   },
 
+  //add banner page
+
   banner: (req, res) => {
     res.render("admin/banner");
   },
+
+  // add new banner
+
   addBanner: async (req, res) => {
     const { title, description } = req.body;
     const image = req.file;
@@ -513,21 +592,22 @@ module.exports = {
       });
   },
 
+  //show banner 
+
   showBanner: async (req, res) => {
     let banner = await bannerModel.find();
     res.render("admin/showBanner", { banner });
   },
 
-  showCoupon:async (req, res) => {
-    let coupon = await couponSchema.find();
-    res.render("admin/showCoupon", { coupon });
-  },
+  //edit banner 
 
   editBanner: async (req, res) => {
     let bannerId = req.params.id;
     let banner = await bannerModel.findById({ _id: bannerId });
     res.render("admin/editBanner", { banner });
   },
+
+  //update edited banner 
 
   updateBanner: async (req, res) => {
     const id = req.params.id;
@@ -549,44 +629,12 @@ module.exports = {
     });
   },
 
+  //delete banner
+
   deleteBanner: async (req, res) => {
     const id = req.params.id;
     await bannerModel.findByIdAndDelete({ _id: id }).then(() => {
       res.redirect("/admin/showBanner");
     });
-  },
-
-  deleteCoupon: async (req, res) => {
-    const id = req.params.id;
-    await couponSchema.findByIdAndDelete({ _id: id }).then(() => {
-      res.redirect("/admin/showCoupon");
-    });
-  },
-
-  updateCoupon: async (req, res) => {
-    const id = req.params.id;
-    const { name , code , discount } = req.body;
-  
-    const coupon = await couponSchema.findByIdAndUpdate(
-      { _id: id },
-      {
-        $set: {
-          name,
-          code,
-          discount
-
-          
-        },
-      }
-    );
-    coupon.save().then(() => {
-      res.redirect("/admin/showCoupon");
-    });
-  },
-
-  editCoupon: async (req, res) => {
-    let couponId = req.params.id;
-    let coupon = await couponSchema.findById({ _id: couponId });
-    res.render("admin/editCoupon", { coupon });
   },
 };

@@ -7,13 +7,15 @@ const orderController = require('../../controllers/user/orderController')
 
 
 router.get("/", controller.userHome);
-// router.get('/home' , controller.home)
+
 
 router.get("/login", controller.login);
 router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 router.get("/productdetail/:id", controller.showProductdetails);
 router.get("/shop",controller.shop)
+router.route("/contact").get (controller.contact).post(controller.contactMessage)
+router.get("/about", controller.about)
 
 //user profile and address management
 

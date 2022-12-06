@@ -7,7 +7,7 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Male-Fashion | Template</title>
+    <title>Insoles</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
@@ -180,9 +180,11 @@
               </div>
             </li>
 
-            <li class="nav-item">
-              <a href="/wishlist" class="nav-link">Wishlist</a>
-            </li>
+            <li class="nav-item  ">
+                <a href="/wishlist" class="nav-link"
+                  ><span class="icon-heart"></span></a
+                >
+              </li>
             <li class="nav-item cta cta-colored">
               <a href="/cart" class="nav-link"
                 ><span class="icon-shopping_cart"></span>[0]</a
@@ -271,79 +273,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFour">Size</a>
-                                    </div>
-                                    <div id="collapseFour" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__size">
-                                                <label for="xs">xs
-                                                    <input type="radio" id="xs">
-                                                </label>
-                                                <label for="sm">s
-                                                    <input type="radio" id="sm">
-                                                </label>
-                                                <label for="md">m
-                                                    <input type="radio" id="md">
-                                                </label>
-                                                <label for="xl">xl
-                                                    <input type="radio" id="xl">
-                                                </label>
-                                                <label for="2xl">2xl
-                                                    <input type="radio" id="2xl">
-                                                </label>
-                                                <label for="xxl">xxl
-                                                    <input type="radio" id="xxl">
-                                                </label>
-                                                <label for="3xl">3xl
-                                                    <input type="radio" id="3xl">
-                                                </label>
-                                                <label for="4xl">4xl
-                                                    <input type="radio" id="4xl">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseFive">Colors</a>
-                                    </div>
-                                    <div id="collapseFive" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__color">
-                                                <label class="c-1" for="sp-1">
-                                                    <input type="radio" id="sp-1">
-                                                </label>
-                                                <label class="c-2" for="sp-2">
-                                                    <input type="radio" id="sp-2">
-                                                </label>
-                                                <label class="c-3" for="sp-3">
-                                                    <input type="radio" id="sp-3">
-                                                </label>
-                                                <label class="c-4" for="sp-4">
-                                                    <input type="radio" id="sp-4">
-                                                </label>
-                                                <label class="c-5" for="sp-5">
-                                                    <input type="radio" id="sp-5">
-                                                </label>
-                                                <label class="c-6" for="sp-6">
-                                                    <input type="radio" id="sp-6">
-                                                </label>
-                                                <label class="c-7" for="sp-7">
-                                                    <input type="radio" id="sp-7">
-                                                </label>
-                                                <label class="c-8" for="sp-8">
-                                                    <input type="radio" id="sp-8">
-                                                </label>
-                                                <label class="c-9" for="sp-9">
-                                                    <input type="radio" id="sp-9">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
+                                
                                 <div class="card">
                                     <div class="card-heading">
                                         <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
@@ -371,7 +302,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__left">
-                                    <p>Showing 1–12 of 126 results</p>
+                                    <p>Showing 1–<%=items_per_page  %>  of <%= totalproducts  %>  results</p>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -394,9 +325,8 @@
                                 <div class="product__item__pic set-bg" data-setbg="/<%= x.image  %> ">
                                     <ul class="product__hover">
                                         <li><a onclick="itemAdded('<%= x._id %>')" ><img src="/public/stylesheet/css/shopPage/icon/heart.png" alt=""></a></li>
-                                        <li><a href="#"><img src="/public/stylesheet/css/shopPage/icon/compare.png" alt=""> <span>Compare</span></a>
-                                        </li>
-                                        <li><a href="#"><img src="/public/stylesheet/css/shopPage/icon/search.png" alt=""></a></li>
+                                        
+                                        <!-- <li><a href="#"><img src="/public/stylesheet/css/shopPage/icon/search.png" alt=""></a></li> -->
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
@@ -425,9 +355,32 @@
                     </div> -->
                 </div>
             </div>
+            
+        </div>
+        <div>
+
+            <section class="d-flex justify-content-center mt-2">
+                <% if(hasPreviousPage){ %>
+                  <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:rgb(223, 54, 54)" class="text-center"
+                    href="/shop?page=<%= PreviousPage %>"><i class="fa-solid fa-chevron-left"
+                      aria-hidden="true"></i></a>
+                  <% } %>
+                    <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:black; border: 1px solid black;"
+                      href="/shop?page=<%= page %>">
+                      <%= page %>
+                    </a>
+                    <% if(hasNextPage) { %>
+                      <a style="text-decoration: none;padding: .5rem; margin:0 1rem; color:black;"
+                        href="/shop?page=<%=  page+1 %>"><i class="fa-solid fa-chevron-right"
+                          aria-hidden="true"></i></a>
+                      <% } %>
+                </section>
+
         </div>
     </section>  
     <!-- Shop Section End -->
+
+
 
 
     <script>
@@ -461,81 +414,90 @@
     </script>
 
     <!-- Footer Section Begin -->
-    <footer class="footer">
+    <footer class="ftco-footer ftco-section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about">
-                        <div class="footer__logo">
-                            <a href="#"><img src="/public/stylesheet/css/shopPage/product/footer-logo.png" alt=""></a>
-                        </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
-                        <a href="#"><img src="/public/stylesheet/css/shopPage/product/payment.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Clothing Store</a></li>
-                            <li><a href="#">Trending Shoes</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Sale</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>Shopping</h6>
-                        <ul>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Delivary</a></li>
-                            <li><a href="#">Return & Exchanges</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                    <div class="footer__widget">
-                        <h6>NewLetter</h6>
-                        <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                            <form action="#">
-                                <input type="text" placeholder="Your email">
-                                <button type="submit"><span class="icon_mail_alt"></span></button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                <div class="mouse">
+                          <a href="#" class="mouse-icon">
+                              <div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
+                          </a>
+                      </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="footer__copyright__text">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        <p>Copyright ©
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>2020
-                            All rights reserved | This template is made with <i class="fa fa-heart-o"
-                            aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        </p>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </div>
-                </div>
+          <div class="row mb-5">
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4">
+                <h2 class="ftco-heading-2">Insoles</h2>
+                <p></p>
+                <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                  <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                  <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                  <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                </ul>
+              </div>
             </div>
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4 ml-md-5">
+                <h2 class="ftco-heading-2">Menu</h2>
+                <ul class="list-unstyled">
+                  <li><a href="/shop" class="py-2 d-block">Shop</a></li>
+                  <li><a href="/about" class="py-2 d-block">About</a></li>
+                  
+                  <li><a href="/contact" class="py-2 d-block">Contact Us</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4">
+               <div class="ftco-footer-widget mb-4">
+                <h2 class="ftco-heading-2">Help</h2>
+                <div class="d-flex">
+                    <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+                      <li><a href="/profile" class="py-2 d-block">Shipping Information</a></li>
+                      <li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
+                      <li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
+                      <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+                    </ul>
+                    <ul class="list-unstyled">
+                      <!-- <li><a href="/contact" class="py-2 d-block">FAQs</a></li> -->
+                      <!-- <li><a href="/contact" class="py-2 d-block">Contact</a></li> -->
+                    </ul>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="ftco-footer-widget mb-4">
+                  <h2 class="ftco-heading-2">Have a Questions?</h2>
+                  <div class="block-23 mb-3">
+                    <ul>
+                      <li><span class="icon icon-map-marker"></span><span class="text">Kakkanchery kinfra, Calicut</span></li>
+                      <li><a href="#"><span class="icon icon-phone"></span><span class="text">9633726803</span></a></li>
+                      <li><a href="#"><span class="icon icon-envelope"></span><span class="text">insolesshoestore@gmail.com</span></a></li>
+                    </ul>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 text-center">
+        
+              <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved </a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                          </p>
+            </div>
+          </div>
         </div>
-    </footer>
+        </footer>
     <!-- Footer Section End -->
 
     <!-- Search Begin -->
-    <div class="search-model">
+    <!-- <div class="search-model">
         <div class="h-100 d-flex align-items-center justify-content-center">
             <div class="search-close-switch">+</div>
             <form class="search-model-form">
                 <input type="text" id="search-input" placeholder="Search here.....">
             </form>
         </div>
-    </div>
+    </div> -->
     <!-- Search End -->
 
     <!-- Js Plugins -->

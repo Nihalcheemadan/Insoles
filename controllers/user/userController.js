@@ -6,6 +6,7 @@ const checkoutSchema = require("../../models/user/addressSchema");
 const addressSchema = require("../../models/user/addressSchema");
 const orderSchema = require("../../models/user/orderSchema");
 const bannerModel = require("../../models/admin/bannerModel");
+const contactSchema = require("../../models/user/contactSchema");
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -33,6 +34,9 @@ module.exports = {
   //session middleware
 
   userSession: async (req, res, next) => {
+    try{
+
+    
     userId = req.session.user._id;
 
     let user = await signupModel.findById({ _id: userId });
@@ -40,6 +44,8 @@ module.exports = {
       next();
     } else {
       res.redirect("/login"); 
+    }}catch{
+      res.render('error')
     }
   },
 
@@ -52,7 +58,7 @@ module.exports = {
   userHome: async (req, res) => {
     if(req.session.userLogin){
 
-      const products = await addProduct.find();
+      const products = await addProduct.find().sort({date:-1}).limit(12)
       const banner = await bannerModel.find()
       console.log(banner);
       res.render("user/userHome", { products , banner });
@@ -182,10 +188,39 @@ module.exports = {
   },
 
   shop:async (req,res)=>{
-    let product = await addProduct.find({})
+    const page = parseInt(req.query.page) || 1;
+    const items_per_page = 10;
+    const totalproducts = await addProduct.find().countDocuments();
+    let product = await addProduct.find({}).sort({ date: -1 })
+    .skip((page - 1) * items_per_page)
+    .limit(items_per_page);
     console.log(product);
-    res.render("user/shop", {product})
+    res.render("user/shop", {product , index: 1,
+      items_per_page,
+      totalproducts,
+      page,
+      hasNextPage: items_per_page * page < totalproducts,
+      hasPreviousPage: page > 1,
+      PreviousPage: page - 1,})
   },
+
+  contact:(req,res)=>{
+    res.render('user/contact')
+  },
+
+  contactMessage:async (req,res)=>{
+    const contact = req.body
+    await new contactSchema(contact).save().then(()=>{
+      res.redirect('/contact')
+    })
+    
+  },
+
+  about:(req,res)=>{
+    res.render('user/about')
+  },
+
+
 
   // logout
 

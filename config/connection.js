@@ -7,7 +7,6 @@ const MongodbURI = "mongodb://0.0.0.0:27017/userdb";
 
 mongoose.connect(MongodbURI,{
   useNewUrlParser:true,
-  
   useUnifiedTopology:true
 }).then((res)=>{
   console.log("mongodb connected");

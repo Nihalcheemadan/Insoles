@@ -75,7 +75,7 @@ module.exports = {
       newCart.save();
     }
     res.redirect("/cart");
-    //
+  
   },
 
   //remove cart product

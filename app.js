@@ -75,6 +75,9 @@ app.use(
 
 app.use("/", userRoute);
 app.use("/admin", adminRoute);
+app.use('*',(req,res)=>{
+  res.render('error')
+})
 
 app.listen(9000, () => {
   console.log("Server running on port 9000");

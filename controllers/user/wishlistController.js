@@ -28,10 +28,9 @@ module.exports = {
 
   // ADD TO WISHLIST
   addToWishlist: async (req, res, next) => {
+    
     let productId = req.body.id;
     let user_id = req.session.user._id;
-    
-
     let wishlist = await wishlistSchema.findOne({ userId: user_id });
     if (wishlist) {
       await wishlistSchema.findOneAndUpdate(
@@ -50,6 +49,7 @@ module.exports = {
       });
       res.json({success:true})
     }
+  
     
     
   },
@@ -70,7 +70,6 @@ module.exports = {
 
   moveToCart:async (req,res)=>{
     let userId = req.session.user._id;
-    
     let productId = req.params.id;
     let product = await addProduct.findById({ _id: productId });
     let quantity = 1

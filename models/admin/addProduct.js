@@ -36,6 +36,10 @@ const addProductSchema = new mongoose.Schema({
     type:String,
     default:"listed"
   },
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
   
 });
 

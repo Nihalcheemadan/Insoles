@@ -3,7 +3,8 @@ const session = require("express-session");
 
 
 
-const MongodbURI = "mongodb://0.0.0.0:27017/userdb";
+// const MongodbURI = "mongodb://0.0.0.0:27017/userdb";
+const MongodbURI = "mongodb+srv://nihal:nPMNVDtjIT2ybDUa@cluster0.mrdwdzm.mongodb.net/Insoles?retryWrites=true&w=majority"  
 
 mongoose.connect(MongodbURI,{
   useNewUrlParser:true,
@@ -11,19 +12,3 @@ mongoose.connect(MongodbURI,{
 }).then((res)=>{
   console.log("mongodb connected");
 })
-
-
-
-
-
-// let db = mongoose.connection;
-// db.once('open',  ()=> {
-//   console.log("Connected successfully");
-// });
-
-// db.on('error', console.error.bind(console, 'MongoDB connection error:')); 
-
-
-
-
-

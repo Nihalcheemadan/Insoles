@@ -14,6 +14,7 @@ router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 router.get("/productdetail/:id", controller.showProductdetails);
 router.get("/shop",controller.shop)
+router.post('/lowPrice',controller.lowPrice)
 router.route("/contact").get (controller.contact).post(controller.contactMessage)
 router.get("/about", controller.about)
 
@@ -62,7 +63,7 @@ router.post('/verifyPayment' , controller.userSession  ,orderController.verifyPa
 router.get('/orders',controller.userSession, orderController.orders)
 router.post('/cancelOrder',controller.userSession,orderController.cancelOrder)
 
-router.post('/checkCoupen' , cartController.checkCoupen)
+router.post('/checkCoupen' ,controller.userSession, cartController.checkCoupen)
 
 
 module.exports = router;

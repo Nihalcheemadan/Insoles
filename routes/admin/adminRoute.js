@@ -30,6 +30,8 @@ router.post('/updateCategory/:id',controller.updateCategory);
 
 router.post('/deleteCategory/:id',controller.deleteCategory);
 
+router.route('/brand').get(controller.brand).post(controller.addBrand)
+
 router.post('/blockUser/:id',controller.blockUser);
 
 router.post('/unblockUser/:id',controller.unblockUser);

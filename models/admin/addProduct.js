@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
-const paginate = require('mongoose-paginate')
+
 
 
 const addProductSchema = new mongoose.Schema({
   category:{
-    type:String,
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"category",
     required:true
   },
   subCategory:{
@@ -16,7 +17,8 @@ const addProductSchema = new mongoose.Schema({
     required: true
   },
   brand: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"brand",
     required: true
   },
   description: {
@@ -40,6 +42,10 @@ const addProductSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  stock:{
+    type:String,
+    default:"Available"
+  }
   
 });
 

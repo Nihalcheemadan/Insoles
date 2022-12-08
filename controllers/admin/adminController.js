@@ -1,20 +1,16 @@
 const bcrypt = require("bcrypt");
-const adminSignup = require("../../models/admin/adminSignup");
 const addProduct = require("../../models/admin/addProduct");
-
 const userSchema = require("../../models/user/signupModel");
-
 const categorySchema = require("../../models/admin/categorySchema");
-
 const signupModel = require("../../models/user/signupModel");
 const subCategorySchema = require("../../models/admin/subCategorySchema");
 const couponSchema = require("../../models/admin/couponSchema");
 const bannerModel = require("../../models/admin/bannerModel");
 const moment = require("moment");
 const orderSchema = require("../../models/user/orderSchema");
+const brandSchema = require("../../models/admin/brand");
 
 module.exports = {
-
   // admin Login
 
   adminLogin: (req, res) => {
@@ -67,10 +63,10 @@ module.exports = {
   //admin session
 
   adminSession: async (req, res, next) => {
-    if (req.session.adminLogin ) {
+    if (req.session.adminLogin) {
       next();
     } else {
-      res.redirect("/admin"); 
+      res.redirect("/admin");
     }
   },
 
@@ -83,10 +79,11 @@ module.exports = {
   //add product page
 
   addProduct: async (req, res, next) => {
-    let category = await categorySchema.find();
+    let category = await categorySchema.find().populate("category");
     let subCategory = await subCategorySchema.find();
-    console.log(subCategory);
-    res.render("admin/addProduct", { category, subCategory });
+    let brand = await brandSchema.find();
+    console.log(brand);
+    res.render("admin/addProduct", { category, subCategory, brand });
   },
 
   // adding new product
@@ -127,6 +124,7 @@ module.exports = {
     const products = await addProduct
       .find({})
       .populate("category")
+      .populate("brand")
       .skip((page - 1) * items_per_page)
       .limit(items_per_page);
     res.render("admin/showProducts", {
@@ -383,6 +381,19 @@ module.exports = {
     });
   },
 
+  //brands
+  brand: (req, res) => {
+    res.render("admin/brand");
+  },
+
+  //add a new brand
+  addBrand: async (req, res) => {
+    const brand = req.body;
+    await new brandSchema(brand).save().then(() => {
+      res.redirect("/admin/brand");
+    });
+  },
+
   //show user section
 
   showUser: async (req, res, next) => {
@@ -526,7 +537,6 @@ module.exports = {
     const products = order.products;
     const address = order.address;
     res.render("admin/invoice", { order, address, products, moment });
-   
   },
 
   //change order status in order management
@@ -592,14 +602,14 @@ module.exports = {
       });
   },
 
-  //show banner 
+  //show banner
 
   showBanner: async (req, res) => {
     let banner = await bannerModel.find();
     res.render("admin/showBanner", { banner });
   },
 
-  //edit banner 
+  //edit banner
 
   editBanner: async (req, res) => {
     let bannerId = req.params.id;
@@ -607,7 +617,7 @@ module.exports = {
     res.render("admin/editBanner", { banner });
   },
 
-  //update edited banner 
+  //update edited banner
 
   updateBanner: async (req, res) => {
     const id = req.params.id;

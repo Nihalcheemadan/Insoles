@@ -182,12 +182,12 @@
 
             <li class="nav-item  ">
                 <a href="/wishlist" class="nav-link"
-                  ><span class="icon-heart"></span></a
+                  ><span class="fa-2x icon-heart"></span></a
                 >
               </li>
             <li class="nav-item cta cta-colored">
               <a href="/cart" class="nav-link"
-                ><span class="icon-shopping_cart"></span>[0]</a
+                ><span class="fa-2x icon-shopping_cart"></span></a
               >
             </li>
           </ul>
@@ -202,17 +202,12 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Shop Section Begin -->
-    <section class="shop spad">
+    <section class="shop spad mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
                     <div class="shop__sidebar">
-                        <div class="shop__sidebar__search">
-                            <form action="#">
-                                <input type="text" placeholder="Search...">
-                                <button type="submit"><span class="icon_search"></span></button>
-                            </form>
-                        </div>
+                        
                         <div class="shop__sidebar__accordion">
                             <div class="accordion" id="accordionExample">
                                 <div class="card">
@@ -223,15 +218,9 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__categories">
                                                 <ul class="nice-scroll">
-                                                    <li><a href="#">Men (20)</a></li>
-                                                    <li><a href="#">Women (20)</a></li>
-                                                    <li><a href="#">Bags (20)</a></li>
-                                                    <li><a href="#">Clothing (20)</a></li>
-                                                    <li><a href="#">Shoes (20)</a></li>
-                                                    <li><a href="#">Accessories (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
-                                                    <li><a href="#">Kids (20)</a></li>
+                                                  <% mainCategory.forEach(function(x) { %>
+                                                    <li><a href="shop?category=<%= x._id %> "><%= x.category %> </a></li>
+                                                   <% }) %> 
                                                 </ul>
                                             </div>
                                         </div>
@@ -245,54 +234,20 @@
                                         <div class="card-body">
                                             <div class="shop__sidebar__brand">
                                                 <ul>
-                                                    <li><a href="#">Louis Vuitton</a></li>
-                                                    <li><a href="#">Chanel</a></li>
-                                                    <li><a href="#">Hermes</a></li>
-                                                    <li><a href="#">Gucci</a></li>
-                                                </ul>
+                                                  
+                                                  <% brands.forEach(function(x) { %>
+                                                    <li><a href="shop?brand=<%= x._id %> "><%= x.brand %> </a></li>
+                                                   <% }) %> 
+                                                  
+                                                </ul> 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                    </div>
-                                    <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__price">
-                                                <ul>
-                                                    <li><a href="#">$0.00 - $50.00</a></li>
-                                                    <li><a href="#">$50.00 - $100.00</a></li>
-                                                    <li><a href="#">$100.00 - $150.00</a></li>
-                                                    <li><a href="#">$150.00 - $200.00</a></li>
-                                                    <li><a href="#">$200.00 - $250.00</a></li>
-                                                    <li><a href="#">250.00+</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                                
                                 
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseSix">Tags</a>
-                                    </div>
-                                    <div id="collapseSix" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__tags">
-                                                <a href="#">Product</a>
-                                                <a href="#">Bags</a>
-                                                <a href="#">Shoes</a>
-                                                <a href="#">Fashio</a>
-                                                <a href="#">Clothing</a>
-                                                <a href="#">Hats</a>
-                                                <a href="#">Accessories</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -305,16 +260,26 @@
                                     <p>Showing 1–<%=items_per_page  %>  of <%= totalproducts  %>  results</p>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__right">
                                     <p>Sort by Price:</p>
+                                     
                                     <select>
-                                        <option value="">Low To High</option>
-                                        <option value="">$0 - $55</option>
-                                        <option value="">$55 - $100</option>
+                                      
+                                        <a href="shop?price=0"><option >Low To High</option></a>
+                                        
+                                        <a href="shop?highPrice=0"><option >High To Low</option></a>
+                                        
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
+                            <!-- sidebar search   -->
+                            <!-- <div class="shop__sidebar__search mx-auto ml-5">
+                              <form action="#">
+                                  <input type="text" placeholder="Search...">
+                                  <button type="submit"><span class="icon_search"></span></button>
+                              </form>
+                          </div> -->
                         </div>
                     </div>
                     <div class="row">
@@ -322,13 +287,15 @@
                             <% if(x.status == "listed") { %>
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item">
+                              
                                 <div class="product__item__pic set-bg" data-setbg="/<%= x.image  %> ">
                                     <ul class="product__hover">
                                         <li><a onclick="itemAdded('<%= x._id %>')" ><img src="/public/stylesheet/css/shopPage/icon/heart.png" alt=""></a></li>
                                         
-                                        <!-- <li><a href="#"><img src="/public/stylesheet/css/shopPage/icon/search.png" alt=""></a></li> -->
+                                        <li><a href="/productdetail/<%= x._id %>"><img style="height: 40px;width: 40px;" src="/public/stylesheet/css/shopPage/icon/eye.png" alt=""></a></li>
                                     </ul>
                                 </div>
+                              
                                 <div class="product__item__text">
                                     <h6><%= x.name  %> </h6>
                                     <a href="/moveToCart/<%= x._id %>" class="add-cart">+ Add To Cart</a>

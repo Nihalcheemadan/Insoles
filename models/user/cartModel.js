@@ -6,27 +6,28 @@ const cartSchema = new mongoose.Schema({
     required: true,
     ref: "userdata",
   },
-  products: [{
-    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'product'},
-    quantity: { type: Number, default: 1 },
-    total : {type:Number,required:true},
-    date: { type: Date, default: Date.now }
-}],
-  cartTotal:{
-    type:Number,
+  products: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "product" },
+      quantity: { type: Number, default: 1 },
+      total: { type: Number, required: true },
+      date: { type: Date, default: Date.now },
+    },
+  ],
+  cartTotal: {
+    type: Number,
   },
 
-  offer:{
-    couponId:{
-      type:mongoose.Schema.Types.ObjectId,
-      ref:"coupon"
+  offer: {
+    couponId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "coupon",
     },
-    discount:{
-      type:Number,
-      default:0
-    }
-  }
-  
+    discount: {
+      type: Number,
+      default: 0,
+    },
+  },
 });
 
 module.exports = cartModel = mongoose.model("cart", cartSchema);

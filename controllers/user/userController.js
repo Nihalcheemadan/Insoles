@@ -2,11 +2,11 @@ const bcrypt = require("bcrypt");
 const signupModel = require("../../models/user/signupModel");
 const addProduct = require("../../models/admin/addProduct");
 const nodemailer = require("nodemailer");
-const checkoutSchema = require("../../models/user/addressSchema");
 const addressSchema = require("../../models/user/addressSchema");
-const orderSchema = require("../../models/user/orderSchema");
 const bannerModel = require("../../models/admin/bannerModel");
 const contactSchema = require("../../models/user/contactSchema");
+const categorySchema = require("../../models/admin/categorySchema");
+const brandSchema = require("../../models/admin/brand");
 
 var otp = Math.random();
 otp = otp * 1000000;
@@ -27,45 +27,48 @@ let transporter = nodemailer.createTransport({
   auth: {
     user: "insolesshoestore@gmail.com",
     pass: "liflarxzssptrpgo",
-  },
+  },  
 });
 
 module.exports = {
   //session middleware
 
   userSession: async (req, res, next) => {
-    try{
+    try {
+      userId = req.session.user._id;
 
-    
-    userId = req.session.user._id;
-
-    let user = await signupModel.findById({ _id: userId });
-    if (req.session.userLogin && user.status === "unblocked") {
-      next();
-    } else {
-      res.redirect("/login"); 
-    }}catch{
-      res.render('error')
+      let user = await signupModel.findById({ _id: userId });
+      if (req.session.userLogin && user.status === "unblocked") {
+        next();
+      } else {
+        res.redirect("/login");
+      }
+    } catch {
+      res.render("error");
     }
   },
-
-  // home:(req,res)=>{
-  //   res.render("user/home")
-  // },
 
   //user home page
 
   userHome: async (req, res) => {
-    if(req.session.userLogin){
+    if (req.session.userLogin) {
+      const products = await addProduct
+        .find({})
+        .populate("brand")
+        .sort({ date: -1 })
+        .limit(12);
+      const banner = await bannerModel.find();
 
-      const products = await addProduct.find().sort({date:-1}).limit(12)
-      const banner = await bannerModel.find()
-      console.log(banner);
-      res.render("user/userHome", { products , banner });
-    }else{
-      const products = await addProduct.find();
-      const banner = await bannerModel.find()
-      res.render('user/home' , { products , banner })
+      res.render("user/userHome", { products, banner });
+    } else {
+      const products = await addProduct
+        .find()
+        .populate("brand")
+        .sort({ date: -1 })
+        .limit(12);
+      const banner = await bannerModel.find();
+
+      res.render("user/home", { products, banner });
     }
   },
 
@@ -187,40 +190,92 @@ module.exports = {
     res.render("user/productdetail", { singleProduct });
   },
 
-  shop:async (req,res)=>{
+  shop: async (req, res) => {
+    const category = req.query.category;
+    const brand = req.query.brand;
+
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 10;
     const totalproducts = await addProduct.find().countDocuments();
-    let product = await addProduct.find({}).sort({ date: -1 })
-    .skip((page - 1) * items_per_page)
-    .limit(items_per_page);
-    console.log(product);
-    res.render("user/shop", {product , index: 1,
-      items_per_page,
-      totalproducts,
-      page,
-      hasNextPage: items_per_page * page < totalproducts,
-      hasPreviousPage: page > 1,
-      PreviousPage: page - 1,})
+    const mainCategory = await categorySchema.find({});
+    const brands = await brandSchema.find({});
+
+    if (category) {
+      let product = await addProduct
+        .find({ category: category })
+        .populate("category")
+        .sort({ date: -1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+
+      res.render("user/shop", {
+        product,
+        mainCategory,
+        brands,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    } else if (brand) {
+      let product = await addProduct
+        .find({ brand: brand })
+        .populate("brand")
+        .sort({ date: -1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+
+      res.render("user/shop", {
+        product,
+        brands,
+        mainCategory,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    } else {
+      let product = await addProduct
+        .find({})
+        .sort({ date: -1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+      res.render("user/shop", {
+        product,
+        mainCategory,
+        brands,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    }
   },
 
-  contact:(req,res)=>{
-    res.render('user/contact')
-  },
-
-  contactMessage:async (req,res)=>{
-    const contact = req.body
-    await new contactSchema(contact).save().then(()=>{
-      res.redirect('/contact')
-    })
+  lowPrice:async(req,res)=>{
     
   },
 
-  about:(req,res)=>{
-    res.render('user/about')
+  contact: (req, res) => {
+    res.render("user/contact");
   },
 
+  contactMessage: async (req, res) => {
+    const contact = req.body;
+    await new contactSchema(contact).save().then(() => {
+      res.redirect("/contact");
+    });
+  },
 
+  about: (req, res) => {
+    res.render("user/about");
+  },
 
   // logout
 
@@ -322,7 +377,7 @@ module.exports = {
         })
         .catch((err) => {
           console.log(err.message);
-      });
+        });
     }
   },
 };

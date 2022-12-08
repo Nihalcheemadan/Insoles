@@ -30,8 +30,8 @@
                       <% products.forEach(function(x) { %>
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><%= x.name %></strong></td>
-                        <td><%= x.brand %></td>
-                        <td><%= x.category %></td> 
+                        <td><%= x.brand.brand %></td>
+                        <td><%= x.category.category%></td> 
                         <td> <img src="/<%= x.image %>" style="height:60px;width: 60px;"> </td> 
                         <td><%= x.price %></td> 
                         

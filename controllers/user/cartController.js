@@ -13,23 +13,20 @@ module.exports = {
       .findOne({ userId: userId })
       .populate("products.productId");
 
-    console.log(cart);
-
     if (cart) {
       let products = cart.products;
-
       let cartTotal = cart.cartTotal;
+      let discount = cart.offer.discount;
 
-      res.render("user/cart", { products, cartTotal });
+      res.render("user/cart", { products, cartTotal, discount });
     } else {
       res.render("user/cart", { products: [] });
     }
   },
 
   // add to cart
-  
+
   addToCart: async (req, res) => {
-    
     let user = req.session.user;
     let userId = user._id;
     let productId = req.params.id;
@@ -75,33 +72,53 @@ module.exports = {
       newCart.save();
     }
     res.redirect("/cart");
-  
   },
 
   //remove cart product
 
   removeCartProduct: async (req, res) => {
     const productId = req.params.id;
-    console.log(productId);
+
     let userId = req.session.user._id;
     let total = parseInt(req.params.total);
-    console.log(total);
 
+    const cartM = await cartModel.findOne({ userId: userId });
+    console.log(cartM);
     let product = addProduct.findById(productId);
-
+    if (cartM.products.length == 1) {
       await cartModel
-      .findOneAndUpdate(
-        { userId: userId },
-        {
-          $pull: { products: { productId } },
-          $inc: {
-            cartTotal: -total,
-          },
-        }
-      )
-      .then(() => {
-        res.redirect("/cart");
-      });
+        .findOneAndUpdate(
+          { userId: userId },
+          {
+            $pull: { products: { productId } },
+
+            $set: {
+              "offer.discount": 0,
+              "offer.couponId": null,
+
+              cartTotal: 0,
+            },
+          }
+        )
+        .then(() => {
+          res.redirect("/cart");
+        });
+    } else {
+      await cartModel
+        .findOneAndUpdate(
+          { userId: userId },
+          {
+            $pull: { products: { productId } },
+
+            $inc: {
+              cartTotal: -total,
+            },
+          }
+        )
+        .then(() => {
+          res.redirect("/cart");
+        });
+    }
   },
 
   //cart quantity increment
@@ -112,7 +129,7 @@ module.exports = {
     let productId = req.body.productId;
     console.log(productId);
     // let price = parseInt(req.body.price);
-    let price = req.body.price
+    let price = req.body.price;
     let product = await addProduct.findById(productId);
 
     let cart = await cartModel
@@ -128,7 +145,7 @@ module.exports = {
       )
       .then(() => {
         // res.redirect("/login/cart");
-        res.json(response)
+        res.json(response);
       });
   },
 
@@ -138,60 +155,68 @@ module.exports = {
     let userId = req.session.user._id;
 
     let productId = req.body.productId;
-    let price = req.body.price
-
+    let price = req.body.price;
     let product = await addProduct.findById(productId);
-
-    let cart = await cartModel
-      .findOneAndUpdate(
-        { userId: userId, "products.productId": productId },
-        {
-          $inc: {
-            "products.$.quantity": -1,
-            "products.$.total": -price,
-            cartTotal: -product.price,
-          },
-        }
-      )
-      .then(() => {
-        res.json(response);
-    });
+    let index;
+    const cartM = await cartModel
+      .findOne({ userId: userId })
+      .populate("products");
+    for (let pro of cartM.products) {
+      if (pro.productId == productId) {
+        index = cartM.products.indexOf(pro);
+        break;
+      }
+    }
+    const quantity = cartM.products[index].quantity;
+    console.log(quantity);
+    if (quantity > 1) {
+      let cart = await cartModel
+        .findOneAndUpdate(
+          { userId: userId, "products.productId": productId },
+          {
+            $inc: {
+              "products.$.quantity": -1,
+              "products.$.total": -price,
+              cartTotal: -product.price,
+            },
+          }
+        )
+        .then(() => {
+          res.json(response);
+        });
+    }
   },
 
+  //CHECK COUPON CODE 
+
   checkCoupen: async (req, res) => {
-    try {
-      
-      const userId = req.session.user._id;
-      const couponCode = req.body.code;
-      const cartTotal = req.body.cartTotal;
-      const confirmCode = await couponSchema.findOne({ code: couponCode });
-      console.log(confirmCode);
-      if (confirmCode) {
-        const existOffer = await cartModel.findOne({userId:userId})
-        if (!existOffer.offer.couponId){
-        discountCoupen = Math.round(cartTotal * confirmCode.discount/ 100) 
+    const userId = req.session.user._id;
+    const couponCode = req.body.code;
+    const cartTotal = req.body.cartTotal;
+    console.log(couponCode);
+    const confirmCode = await couponSchema.findOne({ code: couponCode });
+    console.log(confirmCode);
+    if (confirmCode) {
+      const existOffer = await cartModel.findOne({ userId: userId });
+      if (!existOffer.offer.couponId) {
+        discountCoupen = Math.round((cartTotal * confirmCode.discount) / 100);
         console.log(discountCoupen);
         const cart = await cartModel.findOneAndUpdate(
           { userId: userId },
           {
             $set: {
-              offer:{couponId: confirmCode._id, 
-              discount : discountCoupen},
-          
+              offer: { couponId: confirmCode._id, discount: discountCoupen },
             },
             $inc: { cartTotal: -discountCoupen },
-          },{multi : true}
+          },
+          { multi: true }
         );
-        res.json({apply:true});
-        }else{
-          res.json({exist : true})
-        }
-      }else{
-        res.json({apply : false})
+        res.json({ apply: true });
+      } else {
+        res.json({ exist: true });
       }
-    } catch {
-      console.log("catch working");
+    } else {
+      res.json({ apply: false });
     }
   },
-
 };

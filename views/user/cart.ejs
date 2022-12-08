@@ -16,7 +16,7 @@
         >
           <div class="col-md-9 ftco-animate text-center">
             <p class="breadcrumbs">
-              <span class="mr-2"><a href="index.html">Home</a></span>
+              <span class="mr-2"><a href="/">Home</a></span>
               <span>Cart</span>
             </p>
             <h1 class="mb-0 bread">My Cart</h1>
@@ -53,7 +53,7 @@
                     <td class="image-prod">
                       <div
                         class="img"
-                        style="background-image: url(/<%= x.productId.image %>)"
+                        style="background-image: url('/<%= x.productId.image %>')"
                       ></div>
                     </td>
 
@@ -117,15 +117,15 @@
               <h3>Cart Totals</h3>
               <p class="d-flex">
                 <span>Subtotal</span>
-                <span><%= cartTotal %></span>
+                <span><%= cartTotal+discount %></span>
               </p>
               <p class="d-flex">
                 <span>Delivery</span>
-                <span>0.00</span>
+                <span>Free</span>
               </p>
               <p class="d-flex">
                 <span>Discount</span>
-                <span>0.00</span>
+                <span><%= discount %></span>
               </p>
               <hr />
               <p class="d-flex total-price">

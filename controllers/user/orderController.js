@@ -24,6 +24,7 @@ module.exports = {
   
       if (cart != null && cart.products.length > 0) {
         let cartTotal = cart.cartTotal;
+        console.log(cartTotal);
         let cartItems = cart.products;
         let cartId = cart._id
         let discount =  cart.offer.discount

@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const addProduct = require("../../models/admin/addProduct");
-const userSchema = require("../../models/user/signupModel");
 const categorySchema = require("../../models/admin/categorySchema");
 const signupModel = require("../../models/user/signupModel");
 const subCategorySchema = require("../../models/admin/subCategorySchema");
@@ -397,7 +396,7 @@ module.exports = {
   //show user section
 
   showUser: async (req, res, next) => {
-    let users = await userSchema.find();
+    let users = await signupModel.find();
     res.render("admin/showUser", { users, index: 1 });
   },
 

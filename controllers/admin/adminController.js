@@ -9,6 +9,7 @@ const moment = require("moment");
 const orderSchema = require("../../models/user/orderSchema");
 const brandSchema = require("../../models/admin/brand");
 
+
 module.exports = {
   // admin Login
 
@@ -71,8 +72,56 @@ module.exports = {
 
   // admin home
 
-  adminHome: (req, res) => {
-    res.render("admin/home");
+  adminHome: async (req, res) => {
+    let userCount = await signupModel.find({}).countDocuments()
+    let productCount = await addProduct.find({}).countDocuments()
+    let sales = await orderSchema.aggregate([
+      {
+        "$group":{
+          '_id':null,
+          'totalSales':{
+            "$sum":"$total"
+          }
+        }
+    }])
+
+    let onlinePayments = await orderSchema.aggregate([
+      {
+        "$match":{
+          paymentMethod:"Razorpay"
+        }
+      },
+      {
+        "$group":{
+          "_id":null,
+          'totalOnlineSales':{
+            "$sum":"$total"
+          }
+        }
+      }
+    ])
+
+    let offlinePayments = await orderSchema.aggregate([
+      {
+        "$match":{ 
+          paymentMethod:"COD"
+        }
+      },
+      {
+        "$group":{
+          "_id":null,
+          'totalOfflineSales':{
+            "$sum":"$total"
+          }
+        }
+      }
+    ])
+
+    let totalSales = sales.map(a=> a.totalSales)
+    let totalOnlineSales = onlinePayments.map(a=> a.totalOnlineSales)
+    let offlinePay = offlinePayments.map(a=> a.totalOfflineSales)
+    console.log(offlinePayments); 
+    res.render("admin/home", {userCount,productCount, totalSales , totalOnlineSales ,offlinePay });
   },
 
   //add product page
@@ -182,10 +231,12 @@ module.exports = {
     const singleProduct = await addProduct.findOne({ _id: id });
     let category = await categorySchema.find();
     let subCategory = await subCategorySchema.find();
+    let brand = await brandSchema.find();
     res.render("admin/editProductForm", {
       singleProduct,
       category,
       subCategory,
+      brand
     });
   },
 
@@ -193,6 +244,7 @@ module.exports = {
 
   editProduct: async (req, res) => {
     const id = req.params.id;
+    console.log("........................"+id);
     const image = req.file;
 
     const { category, subCategory, name, brand, description, price } = req.body;

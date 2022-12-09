@@ -31,7 +31,7 @@
 
                             <select class="form-control" name="category">
                               <% category.forEach(function(x) { %>
-                              <option  ><%= x.category %></option>
+                              <option  value="<%= x._id %>"><%= x.category %></option>
                               <% }) %>
                             </select>
                           </div>
@@ -65,15 +65,18 @@
                           />
                         </div>
                         <div class="mb-3">
-                          <label class="form-label" for="brand">Brand</label>
-                          <input
-                            type="text"
-                            class="form-control"
-                            value="<%= singleProduct.brand %>"
-                            ,
-                            name="brand"
-                            required
-                          />
+                          <div class="form-group">
+                            <label
+                              class="form-label"
+                              for="basic-default-fullname"
+                              >Brand</label
+                            > 
+                            <select class="form-control" name="brand">
+                              <% brand.forEach(function(x) { %> 
+                              <option value="<%= x._id %>" ><%= x.brand %></option>
+                              <% }) %>
+                            </select>
+                          </div>
                         </div>
                         <div class="mb-3">
                           <label class="form-label" for="description"

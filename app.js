@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const session = require("express-session");
+const db = require('./config/connection')
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");

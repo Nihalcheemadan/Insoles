@@ -73,6 +73,9 @@ module.exports = {
   // admin home
 
   adminHome: async (req, res) => {
+    try{
+
+    
     let userCount = await signupModel.find({}).countDocuments()
     let productCount = await addProduct.find({}).countDocuments()
     let sales = await orderSchema.aggregate([
@@ -120,13 +123,18 @@ module.exports = {
     let totalSales = sales.map(a=> a.totalSales)
     let totalOnlineSales = onlinePayments.map(a=> a.totalOnlineSales)
     let offlinePay = offlinePayments.map(a=> a.totalOfflineSales)
-    console.log(offlinePayments); 
+    
     res.render("admin/home", {userCount,productCount, totalSales , totalOnlineSales ,offlinePay });
+    }catch{
+    
+      res.render('error')
+    }
   },
 
   //add product page
 
   addProduct: async (req, res, next) => {
+    
     let category = await categorySchema.find().populate("category");
     let subCategory = await subCategorySchema.find();
     let brand = await brandSchema.find();

@@ -463,7 +463,7 @@
                     type="text"
                     class="border p-3"
                     id="codeInput"
-                    placeholder="Applay coupen"
+                    placeholder="Apply coupon"
                     style="border-radius: 10px; height: 3rem; width: 12rem"
                   />
                 </span>
@@ -474,9 +474,9 @@
                   <button
                     class="btn border apply"
                     style="border-radius: 10px; width: 75px; height: 3rem"
-                    onclick="getcoupen('<%= cartTotal %>','<%= cartId %>')"
+                    onclick="getCoupon('<%= cartTotal %>','<%= cartId %>')"
                   >
-                    Applay
+                    Apply
                   </button>
                 </span>
               </div>
@@ -605,7 +605,7 @@
       }
 
       
-      function getcoupen(cartTotal, cartId) {
+      function getCoupon(cartTotal, cartId) {
         const code = document.querySelector("#codeInput").value;
         $.ajax({
           url: "/checkCoupen",

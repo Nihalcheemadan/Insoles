@@ -193,6 +193,7 @@ module.exports = {
   shop: async (req, res) => {
     const category = req.query.category;
     const brand = req.query.brand;
+    const sort = req.query.sort;
 
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 10;
@@ -238,7 +239,66 @@ module.exports = {
         hasPreviousPage: page > 1,
         PreviousPage: page - 1,
       });
-    } else {
+    }else if(sort=='ascending'){
+      let product = await addProduct
+        .find({})
+        
+        .sort({ price: 1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+
+      res.render("user/shop", {
+        product,
+        brands,
+        mainCategory,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    }else if(sort=='descending'){
+      let product = await addProduct
+        .find({})
+        
+        .sort({ price: -1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+
+      res.render("user/shop", {
+        product,
+        brands,
+        mainCategory,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    }
+    else if(sort=='new'){
+      let product = await addProduct
+        .find({})
+        
+        .sort({ dare: -1 })
+        .skip((page - 1) * items_per_page)
+        .limit(items_per_page);
+
+      res.render("user/shop", {
+        product,
+        brands,
+        mainCategory,
+        items_per_page,
+        totalproducts,
+        page,
+        hasNextPage: items_per_page * page < totalproducts,
+        hasPreviousPage: page > 1,
+        PreviousPage: page - 1,
+      });
+    }
+     else {
       let product = await addProduct
         .find({})
         .sort({ date: -1 })
@@ -258,9 +318,8 @@ module.exports = {
     }
   },
 
-  lowPrice:async(req,res)=>{
-    
-  },
+  
+
 
   contact: (req, res) => {
     res.render("user/contact");

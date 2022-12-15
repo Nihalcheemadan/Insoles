@@ -12,18 +12,18 @@ const orderModel = new mongoose.Schema({
       productId: { type: ObjectId, ref: "product" },
       quantity: { type: Number },
       total: { type: Number, required: true },
-      paymentStatus: {
-        type: String,
-        default: "Pending",
-      },
+      
       orderStatus: {
         type: String,
         default: "Order Placed",
         enum: ["Order Placed", "Packed",  "Shipped", "Delivered", "Cancelled"],
       },
-
     },
   ],
+  paymentStatus: {
+    type: String,
+    default: "Pending",
+  },
   total: {
     type: Number,
     required: true,

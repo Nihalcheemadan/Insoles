@@ -150,16 +150,15 @@
               >
               <div class="dropdown-menu" aria-labelledby="dropdown04">
                 <a class="dropdown-item" href="/shop">SHOP</a>
-                
                 <a class="dropdown-item" href="/cart">CART</a>
                 <a class="dropdown-item" href="/checkout">CHECKOUT</a>
               </div>
+            </li> 
+            <li class="nav-item">
+              <a href="/about" class="nav-link">About</a>
             </li>
             <li class="nav-item">
-              <a href="/about" class="nav-link">ABOUT</a>
-            </li>
-            <li class="nav-item">
-              <a href="/contact" class="nav-link">CONTACT</a>
+              <a href="/contact" class="nav-link">Contact</a>
             </li>
 
             <li class="nav-item dropdown">
@@ -177,12 +176,11 @@
                 <a class="dropdown-item" href="/logout">LOGOUT</a>
               </div>
             </li>
-
-            <li class="nav-item  ">
-                <a href="/wishlist" class="nav-link"
-                  ><span class="fa-2x icon-heart"></span></a
-                >
-              </li>
+            <li class="nav-item ml-5 " >
+              <a href="/wishlist" class="nav-link" 
+                ><i   class="fa-2x icon-heart"></i></a
+              >
+            </li>
             <li class="nav-item cta cta-colored">
               <a href="/cart" class="nav-link"
                 ><span class="fa-2x icon-shopping_cart"></span></a
@@ -203,99 +201,22 @@
     <section class="shop spad mt-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="shop__sidebar">
-                        
-                        <div class="shop__sidebar__accordion">
-                            <div class="accordion" id="accordionExample">
-                              <div class="shop__sidebar__search mx-auto ml-5">
-                                <form class="w-md-50 input-group mt-md-0 mt-3">
-                                  <input
-                                    id="searchbar"
-                                    onkeyup="search()"
-                                    type="text"
-                                    name="search"
-                                    placeholder="Search .."
-                                    class="form-control"
-                                    aria-label="Search"
-                                  />
-                                  <a  href="/shop" class="mt-1 btn btn-gray" type="submit">
-                                    <i  class="fa-2x icon-search"></i>
-                                  </a>
-                                </form>
-                            </div>
-                            <div class="wrap-filter ">
-                              <div class="filter-col ">
-                                <div class="mtext-102 cl2 p-b-15">SORT ITEMS</div>
-                          
-                                <ul>
-                                  <!-- <li class="p-b-6">
-                                    <a href="sohp?sort=default" class="filter-link stext-106 trans-04">
-                                      Default
-                                    </a>
-                                  </li> -->
-                          
-                                  <li class="p-b-6">
-                                    <a href="shop?sort=new" class="filter-link stext-106 trans-04 ">
-                                      Newest First
-                                    </a>
-                                  </li>
-                          
-                                  <li class="p-b-6">
-                                    <a href="shop?sort=ascending" class="filter-link stext-106 trans-04">
-                                      Price: Low to High
-                                    </a>
-                                  </li>
-                                  
-                                  <li class="p-b-6">
-                                    <a href="shop?sort=descending" class="filter-link stext-106 trans-04">
-                                      Price: High to Low
-                                    </a>
-                                  </li>
-                                </ul>
-                              </div>
-                            
-                          </div>
-                                <div class="card mt-4">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
-                                    </div>
-                                    <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__categories">
-                                                <ul class="nice-scroll">
-                                                  <% mainCategory.forEach(function(x) { %>
-                                                    <li><a href="shop?category=<%= x._id %> "><%= x.category %> </a></li>
-                                                   <% }) %> 
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-heading">
-                                        <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="shop__sidebar__brand">
-                                                <ul>
-                                                  
-                                                  <% brands.forEach(function(x) { %>
-                                                    <li><a href="shop?brand=<%= x._id %> "><%= x.brand %> </a></li>
-                                                   <% }) %> 
-                                                  
-                                                </ul> 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                               
-                                
-                                
-                            </div>
-                        </div>
+                <div class="col-lg-3 ">
+                    <div class="shop__sidebar__search mx-auto ml-5">
+                        <form class="w-md-50 input-group mt-md-0 mt-3">
+                          <input
+                            id="searchbar"
+                            onkeyup="search_animal()"
+                            type="text"
+                            name="search"
+                            placeholder="Search .."
+                            class="form-control"
+                            aria-label="Search"
+                          />
+                          <a href="/search" class="btn btn-light" type="submit">
+                            <i class="icon-search"></i>
+                          </a>
+                        </form>
                     </div>
                 </div>
                 <div class="col-lg-9">
@@ -306,33 +227,28 @@
                                     <p>Showing 1–<%=items_per_page  %>  of <%= totalproducts  %>  results</p>
                                 </div>
                             </div>
-                            <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="shop__product__option__right">
                                     <p>Sort by Price:</p>
                                      
                                     <select>
                                       
-                                        <a href="shop?price=0"><option >Low To High</option></a>
+                                        <a href="shop?price=ascending">Low To High</a>
                                         
-                                        <a href="shop?highPrice=0"><option >High To Low</option></a>
+                                        <a href="shop?price=descending"></a><option >High To Low</option>
                                         
                                     </select>
                                 </div>
-                            </div> -->
-                            <!-- sidebar search   -->
-                            <!-- <div class="shop__sidebar__search mx-auto ml-5">
-                              <form action="#">
-                                  <input type="text" placeholder="Search...">
-                                  <button type="submit"><span class="icon_search"></span></button>
-                              </form>
-                          </div> -->
+                            </div>
+                            
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row " id="animals">
+                      
                         <% product.forEach(function(x) { %> 
                             <% if(x.status == "listed") { %>
-                        <div class="search col-lg-4 col-md-6 col-sm-6 ">
-                            <div class="product__item">
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item" >
                               
                                 <div class="product__item__pic set-bg" data-setbg="/<%= x.image  %> ">
                                     <ul class="product__hover">
@@ -353,6 +269,7 @@
                         </div>
                         <% } %> 
                         <% }) %> 
+                      
                         
                         
                     <!-- <div class="row">
@@ -422,21 +339,59 @@
             });
   
         }
+
+
     }})
     }
-
-    function search() {
-      let input = document.getElementById("searchbar").value;
-      input = input.toLowerCase();
-      let x = document.getElementsByClassName("search");
-      for (i = 0; i < x.length; i++) {
-        if (!x[i].innerHTML.toLowerCase().includes(input)) {
-          x[i].style.display = "none";
-          } else {
-          x[i].style.display = "list-item";
-        }
+    function search_animal() {
+    let input = document.getElementById("searchbar").value;
+    input = input.toLowerCase();
+    let x = document.getElementById("animals");
+    for (i = 0; i < x.length; i++) {
+      if (!x[i].innerHTML.toLowerCase().includes(input)) {
+        x[i].style.display = "none";
+      } else {
+        x[i].style.display = "list-item";
       }
     }
+  }
+
+    function highToLow(){
+
+    $.ajax({
+    url: "/shop/highToLow",
+    data:{
+
+    },
+    method: "post",
+    success: (response) => {
+    if (response.success) {
+
+    console.log('success');
+  
+
+  } 
+
+  }})
+  }
+  function lowToHigh(){
+
+$.ajax({
+url: "/lowToHigh",
+dat:{
+
+},
+method: "post",
+success: (response) => {
+if (response.success) {
+
+console.log('success');
+
+
+} 
+
+}})
+}
     </script>
 
     <!-- Footer Section Begin -->
@@ -540,3 +495,6 @@
 </body>
 
 </html>
+
+
+

@@ -158,7 +158,7 @@
         </div>
     </div> -->
     <!-- Checkout -->
-    <div id="checkout"  class="container bg0 p-t-20 p-b-85">
+    <div id="checkout" class="container bg0 p-t-20 p-b-85">
       <div class="row">
         <div class="col-lg-10 col-xl-7 m-lr-auto">
           <div class="m-l-25 m-r--38 m-lr-0-xl">
@@ -411,7 +411,6 @@
                 <span class="mtext-101 cl2">Sub Total </span>
               </div>
 
-
               <div class="size-209 p-t-1 p-b-5 d-flex justify-content-end">
                 <span class="mtext-110 cl2">₹ <%= cartTotal+discount %> </span>
               </div>
@@ -526,7 +525,6 @@
     </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-      
       function placeOrder(index) {
         let num = parseInt(index);
 
@@ -534,20 +532,31 @@
           ? "COD"
           : "Razorpay";
 
-        $.ajax({
-          url: "/placeOrder",
-          data: {
-            index: num,
-            paymentMethod: paymentMethod,
-          },
-          method: "post",
-          success: (response) => {
-            if (response.codSuccess) {
-              location.href = "/orderSuccess";
-            } else {
-              razorpayPayment(response);
-            }
-          },
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, place the order!",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: "/placeOrder",
+              data: {
+                index: num,
+                paymentMethod: paymentMethod,
+              },
+              method: "post",
+              success: (response) => {
+                if (response.codSuccess) {
+                  location.href = "/orderSuccess";
+                } else {
+                  razorpayPayment(response);
+                }
+              },
+            });
+          }
         });
       }
       function razorpayPayment(order) {
@@ -604,7 +613,6 @@
         });
       }
 
-      
       function getCoupon(cartTotal, cartId) {
         const code = document.querySelector("#codeInput").value;
         $.ajax({
@@ -612,26 +620,24 @@
           data: {
             cartTotal,
             cartId,
-            code
+            code,
           },
           method: "post",
           success: (response) => {
             if (response.apply) {
-              window.location.reload()
+              window.location.reload();
               Swal.fire({
                 icon: "success",
                 title: "Success",
                 text: "coupon applied",
               });
             } else if (response.exist) {
-              
               Swal.fire({
                 icon: "error",
                 title: "Bad luck",
                 text: "coupon already applied",
               });
             } else {
-              
               Swal.fire({
                 icon: "error",
                 title: "Bad luck",
@@ -649,8 +655,6 @@
           text: "Address not added!",
         });
       }
-
-      
     </script>
     <footer class="ftco-footer ftco-section">
       <div class="container">

@@ -36,7 +36,6 @@ module.exports = {
     let total = product.price * quantity;
 
     let cart = await cartModel.findOne({ userId: userId });
-
     if (cart) {
       // checking that product already exist in cart
       let exist = await cartModel.findOne({

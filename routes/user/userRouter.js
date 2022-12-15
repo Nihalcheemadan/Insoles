@@ -12,9 +12,10 @@ router.get("/logout", controller.logout);
 router.post("/user", controller.signin);
 router.get("/productdetail/:id", controller.showProductdetails);
 router.get("/shop",controller.shop)
-router.post('/lowPrice',controller.lowPrice)
 router.route("/contact").get (controller.contact).post(controller.contactMessage)
 router.get("/about", controller.about)
+
+
 
 //user profile and address management
 

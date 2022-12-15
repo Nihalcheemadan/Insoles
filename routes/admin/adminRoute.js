@@ -48,7 +48,7 @@ router.post('/editBanner/:id', controller.editBanner)
 
 //order management
 router.get('/orders',controller.adminSession,controller.orders);
-router.post('/invoice/:id' , controller.invoice)
+router.post('/invoice/:id/:productId' , controller.invoice)
 router.post('/changeStatus',controller.changeStatus)
 
 module.exports = router;

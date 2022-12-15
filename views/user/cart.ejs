@@ -30,7 +30,7 @@
         <div class="row">
           <div class="col-md-12 ftco-animate">
             <div class="cart-list" id="cart">
-              <table class="table">
+              <table class="table" >
                 <thead class="thead-primary">
                   <tr class="text-center">
                     <th>&nbsp;</th>
@@ -42,7 +42,7 @@
                   </tr>
                 </thead>
                 <% products.forEach(function(x){ %>
-                <tbody id="cartItem">
+                <tbody id="productCard">
                   <tr class="text-center">
                     <td class="product-remove">
                       <a  href="/removeProduct/<%= x.productId._id %>/<%= x.total %>"
@@ -64,7 +64,7 @@
 
                     <td class="price"><%= x.productId.price %></td>
                     <!-- href="/QtyDecrement/<%= x.productId._id %>/<%= x.productId.price %>  "   href="/QtyIncrement/<%= x.productId._id %>/<%= x.productId.price %> "  -->
-                    <td class="quantity">
+                    <td class="quantity" id="decrement">
                       <div class="input-group mb-3">
                         <a onclick="QtyDecrement('<%= x.productId._id %>','<%= x.productId.price %>')" >
                           <button id="button" style="width: 40px">-</button>
@@ -331,7 +331,7 @@
           },
           method: "post",
           success: (response) => {
-            console.log("cart updated");
+            // $("#decrement").load(location.href + "decrement>*","");
             window.location.reload()
           },
         });

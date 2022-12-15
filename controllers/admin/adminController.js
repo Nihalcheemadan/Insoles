@@ -145,6 +145,7 @@ module.exports = {
   // adding new product
 
   newProduct: async (req, res, next) => {
+    try{
     const { category, subCategory, name, brand, description, price } = req.body;
     const image = req.file;
 
@@ -164,15 +165,15 @@ module.exports = {
         console.log(newProduct);
         res.redirect("/admin/addProduct");
       })
-      .catch((err) => {
-        console.log(err.message);
-        console.log(err);
-      });
+    }catch{
+      res.render('error')
+    }
   },
 
   //show product section
 
   showProducts: async (req, res, next) => {
+    try{
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 5;
     const totalproducts = await addProduct.find().countDocuments();
@@ -191,6 +192,9 @@ module.exports = {
       hasPreviousPage: page > 1,
       PreviousPage: page - 1,
     });
+  }catch{
+    res.render('error')
+  }
 
     // let products = await addProduct.find();
   },
@@ -234,6 +238,7 @@ module.exports = {
   //edit product page
 
   editProductForm: async (req, res) => {
+    try{
     const id = req.params.id;
 
     const singleProduct = await addProduct.findOne({ _id: id });
@@ -246,13 +251,17 @@ module.exports = {
       subCategory,
       brand
     });
+  }catch{
+    res.render('error')
+  }
   },
 
   // update product
 
   editProduct: async (req, res) => {
+    try{
     const id = req.params.id;
-    console.log("........................"+id);
+    
     const image = req.file;
 
     const { category, subCategory, name, brand, description, price } = req.body;
@@ -276,9 +285,10 @@ module.exports = {
       .then(() => {
         res.redirect("/admin/showProducts");
       })
-      .catch((err) => {
-        console.log(err);
-      });
+     
+    }catch{
+      res.render('error')
+    }
   },
 
   //show categroy section
@@ -326,7 +336,7 @@ module.exports = {
         });
       }
     } catch (error) {
-      res.status(400).send({ success: false, msg: error.message });
+      res.render('error');
     }
   },
 
@@ -379,13 +389,14 @@ module.exports = {
         });
       }
     } catch (error) {
-      res.status(400).send({ success: false, msg: error.message });
+      res.render('error');
     }
   },
 
   //edit category form
 
   editCategory: async (req, res, next) => {
+    try{
     const id = req.params.id;
     const imageUrl = req.file;
     console.log(imageUrl);
@@ -395,6 +406,9 @@ module.exports = {
       .populate("category_id");
 
     res.render("admin/editCategory", { singleCategory, category });
+    }catch{
+      res.render('error')
+    }
   },
 
   //categroy form
@@ -407,6 +421,7 @@ module.exports = {
   //update category
 
   updateCategory: async (req, res) => {
+    try{
     const id = req.params.id;
     const image = req.file;
     const { category, subCategory } = req.body;
@@ -429,6 +444,9 @@ module.exports = {
       .catch((err) => {
         console.log(err);
       });
+    }catch{
+      res.render('error')
+    }
   },
 
   //delete category
@@ -512,6 +530,7 @@ module.exports = {
   // add new coupon
 
   addCoupon: async (req, res) => {
+
     const coupon = req.body;
     await new couponSchema(coupon).save().then(() => {
       res.redirect("/admin/coupon");
@@ -530,6 +549,7 @@ module.exports = {
   //update coupon
 
   updateCoupon: async (req, res) => {
+    try{
     const id = req.params.id;
     const { name, code, discount } = req.body;
 
@@ -546,19 +566,27 @@ module.exports = {
     coupon.save().then(() => {
       res.redirect("/admin/showCoupon");
     });
+  }catch{
+    res.render('error')
+  }
   },
 
   //edit coupon
 
   editCoupon: async (req, res) => {
+    try{
     let couponId = req.params.id;
     let coupon = await couponSchema.findById({ _id: couponId });
     res.render("admin/editCoupon", { coupon });
+    }catch{
+      res.render('error')
+    }
   },
 
   //orders page
 
   orders: async (req, res) => {
+    try{
     const page = parseInt(req.query.page) || 1;
     const items_per_page = 8;
     const totalproducts = await orderSchema.find().countDocuments();
@@ -579,13 +607,20 @@ module.exports = {
       hasPreviousPage: page > 1,
       PreviousPage: page - 1,
     });
+  }catch{
+    res.render('error')
+  }
   },
 
   //invoice
 
   invoice: async (req, res) => {
+    try{
+
+    
     let orderId = req.params.id;
-    console.log(orderId);
+    let productId = req.params.productId;
+    
 
     let order = await orderSchema
       .findOne({ _id: orderId })
@@ -596,11 +631,18 @@ module.exports = {
     const products = order.products;
     const address = order.address;
     res.render("admin/invoice", { order, address, products, moment });
+    }catch{
+      console.log("catchhhhh");
+      res.render('error');
+    }
   },
 
   //change order status in order management
 
   changeStatus: async (req, res) => {
+    try{
+
+    
     const { status, orderId, productId } = req.body;
     if (status == "Order Placed") {
       await orderSchema.updateOne(
@@ -636,6 +678,9 @@ module.exports = {
       );
     }
     res.json({ success: "success" });
+  }catch{
+    res.render(error)
+  }
   },
 
   //add banner page
@@ -647,6 +692,9 @@ module.exports = {
   // add new banner
 
   addBanner: async (req, res) => {
+    try{
+
+    
     const { title, description } = req.body;
     const image = req.file;
 
@@ -659,6 +707,9 @@ module.exports = {
       .then(() => {
         res.redirect("/admin/banner");
       });
+    }catch{
+      res.render('error')
+    }
   },
 
   //show banner
@@ -671,14 +722,19 @@ module.exports = {
   //edit banner
 
   editBanner: async (req, res) => {
+    try{
     let bannerId = req.params.id;
     let banner = await bannerModel.findById({ _id: bannerId });
     res.render("admin/editBanner", { banner });
+    }catch{
+      res.render('error')
+    }
   },
 
   //update edited banner
 
   updateBanner: async (req, res) => {
+    try{
     const id = req.params.id;
     const { title, description } = req.body;
     const image = req.file;
@@ -696,6 +752,9 @@ module.exports = {
     banner.save().then(() => {
       res.redirect("/admin/showBanner");
     });
+  }catch{
+    res.render('error')
+  }
   },
 
   //delete banner

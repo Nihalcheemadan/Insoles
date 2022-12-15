@@ -113,10 +113,10 @@ module.exports = {
     hmac = hmac.digest("hex");
     if (hmac === details.payment.razorpay_signature) {
       let orderId = details.order.receipt;
-      // await orderSchema.updateOne(
-      //   { _id: orderId , "products.productId": productId  },
-      //   { $set: { "products.$.paymentStatus": "Paid" } }
-      // );
+      await orderSchema.updateOne(
+        { _id: orderId  },
+        { $set: { paymentStatus: "Paid" } }
+      );
       await cartModel.findByIdAndDelete({ _id: cart._id });
       res.json({ status: true });
     } else {

@@ -125,10 +125,10 @@
                             </div>
                             <div class="d-flex justify-content-center" style="width: 20%;">
 
-                                <span  class="text-center "><%= x.paymentStatus %></span>
+                                <span  class="text-center "><%= order.paymentStatus %></span>
                             </div>
                             <div class="d-flex justify-content-center" style="width: 20%;">
-                              <form action="/admin/invoice/<%= order._id %>" method="post" enctype="multipart/form-data">
+                              <form action="/admin/invoice/<%= order._id %>/<%= x.productId._id%>" method="post" enctype="multipart/form-data">
                                 <% if(x.orderStatus == "Cancelled") { %>
                                   <h6>No bill</h6>
                                   <% } else if(x.orderStatus == "Cancelled") { %> 

@@ -24,7 +24,7 @@ app.use("/public", express.static("public"));
 app.use(cookieParser());
 
 const store = new MongoDBSession({
-  uri: "mongodb://0.0.0.0:27017/userdb",
+  uri: "mongodb+srv://nihal:nPMNVDtjIT2ybDUa@cluster0.mrdwdzm.mongodb.net/Insoles?retryWrites=true&w=majority",
   collection: "my session",
 });
 
